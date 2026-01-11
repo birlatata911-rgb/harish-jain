@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Harish Anime Tracker</title>
+<link rel="icon" href="https://cdn-icons-png.flaticon.com/512/616/616430.png">
+<style>
+body{
+    margin:0;
+    background:#0b0b0b;
+    color:white;
+    font-family:Arial, sans-serif;
+}
+header{
+    background:#111;
+    padding:15px;
+    text-align:center;
+    border-bottom:2px solid #ff4757;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+h1{color:#ff4757;margin:0;}
+.search-box{margin-top:10px;}
+.search-box input{
+    padding:10px;
+    width:300px;
+    max-width:90%;
+    border-radius:20px;
+    border:none;
+    outline:none;
+}
+.sort-buttons{
+    margin-top:10px;
+}
+.sort-buttons button{
+    margin:5px;
+    padding:8px 15px;
+    border:none;
+    border-radius:15px;
+    background:#ff4757;
+    color:white;
+    cursor:pointer;
+    transition:0.2s;
+}
+.sort-buttons button:hover{
+    background:#ff6b81;
+}
+
+#grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:20px;
+    padding:20px;
+}
+
+.card{
+    background:#151515;
+    border-radius:12px;
+    overflow:hidden;
+    border:1px solid #333;
+    transition:0.2s;
+}
+.card:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 15px #ff4757;
+}
+.card img{
+    width:100%;
+    height:320px;
+    object-fit:cover;
+}
+.info{
+    padding:10px;
+}
+.info h3{
+    font-size:15px;
+    color:#ff6b81;
+    margin:5px 0;
+}
+.info p{
+    font-size:12px;
+    color:#ddd;
+    margin:4px 0;
+}
+
+.loader{
+    text-align:center;
+    padding:20px;
+    color:#aaa;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Harish Anime Tracker</h1>
+    <p>Explore anime • Infinite scroll</p>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search anime title...">
+    </div>
+    <div class="sort-buttons">
+        <button onclick="setSort('SCORE_DESC')">Top Rated</button>
+        <button onclick="setSort('START_DATE_DESC')">New Releases</button>
+        <button onclick="setSort('POPULARITY_DESC')">Popular</button>
+    </div>
+</header>
+
+<div id="grid"></div>
+<div class="loader" id="loader">Loading more anime...</div>
+
+<script>
+let page = 1;
+let searchTerm = "";
+let currentSort = "POPULARITY_DESC";
+let loading = false;
+
+const grid = document.getElementById("grid");
+const loader = document.getElementById("loader");
+const searchInput = document.getElementById("searchInput");
+
+async function loadAnime(reset=false){
+    if(loading) return;
+    loading = true;
+    loader.style.display = "block";
+
+    const query = `
+    query ($page:Int, $search:String, $sort:[MediaSort]) {
+      Page(page:$page, perPage:20) {
+        media(type:ANIME, search:$search, sort:$sort) {
+          title { romaji }
+          description
+          episodes
+          averageScore
+          coverImage { large }
+        }
+      }
+    }`;
+
+    const res = await fetch("https://graphql.anilist.co",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({
+            query,
+            variables:{ page, search: searchTerm || null, sort:[currentSort] }
+        })
+    });
+
+    const data = await res.json();
+
+    if(reset) grid.innerHTML = "";
+
+    data.data.Page.media.forEach(a=>{
+        const card = document.createElement("div");
+        card.className="card";
+        card.innerHTML = `
+            <img src="${a.coverImage.large}">
+            <div class="info">
+                <h3>${a.title.romaji}</h3>
+                <p><b>Episodes:</b> ${a.episodes ?? "N/A"}</p>
+                <p><b>Rating:</b> ⭐ ${a.averageScore ?? "?"}</p>
+                <p>${(a.description || "").replace(/<[^>]*>/g,"").slice(0,120)}...</p>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+
+    page++;
+    loading = false;
+    loader.style.display = "none";
+}
+
+// Infinite scroll
+window.addEventListener("scroll",()=>{
+    if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 300){
+        loadAnime();
+    }
+});
+
+// Search
+searchInput.addEventListener("keyup",(e)=>{
+    searchTerm = e.target.value;
+    page = 1;
+    grid.innerHTML = "";
+    loadAnime(true);
+});
+
+// Set sort
+function setSort(sort){
+    currentSort = sort;
+    page = 1;
+    grid.innerHTML = "";
+    loadAnime(true);
+}
+
+// Initial load
+loadAnime();
+</script>
+
+</body>
+</html>
