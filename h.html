@@ -1,279 +1,1010 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>UNO Game</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimeFiesta - Ultimate Anime Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+            --accent: #45b7d1;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --light: #f8f9fa;
+            --gray: #2d3436;
+            --card-bg: #1a1a1a;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: linear-gradient(135deg, var(--darker), var(--gray));
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+
+        nav ul {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        nav a.active {
+            color: var(--primary);
+            background: rgba(255, 107, 107, 0.15);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(10, 10, 10, 0.9), rgba(10, 10, 10, 0.9)),
+                        url('https://images.unsplash.com/photo-1639322537228-f710d846310a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            padding: 4rem 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            border: 1px solid var(--gray);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            color: #ccc;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            color: #aaa;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Filters */
+        .filters {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--gray);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        select, input, button {
+            padding: 0.7rem 1rem;
+            background: var(--darker);
+            border: 1px solid var(--gray);
+            border-radius: 5px;
+            color: var(--light);
+            font-size: 1rem;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.2);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Anime Grid */
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .anime-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--gray);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .anime-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+            border-color: var(--primary);
+        }
+
+        .anime-card::after {
+            content: 'Click to Watch →';
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            color: var(--primary);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+        }
+
+        .anime-card:hover::after {
+            opacity: 1;
+        }
+
+        .image-container {
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 2px solid var(--primary);
+            background: linear-gradient(45deg, var(--darker), var(--gray));
+        }
+
+        .anime-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .anime-card:hover .anime-image {
+            transform: scale(1.05);
+        }
+
+        .anime-info {
+            padding: 1.5rem;
+        }
+
+        .anime-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--light);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .anime-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .anime-description {
+            color: #ccc;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .anime-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .anime-status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-watching {
+            background: rgba(78, 205, 196, 0.2);
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+        }
+
+        .status-completed {
+            background: rgba(69, 183, 209, 0.2);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .status-planning {
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .rating {
+            color: #ffd700;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* Watch Button */
+        .watch-btn {
+            display: block;
+            width: 100%;
+            background: linear-gradient(45deg, var(--primary), #ff5252);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .watch-btn:hover {
+            background: linear-gradient(45deg, #ff5252, var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Platform Buttons */
+        .platform-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .platform-btn {
+            flex: 1;
+            min-width: 120px;
+            background: var(--darker);
+            color: var(--light);
+            border: 1px solid var(--gray);
+            padding: 0.5rem 0.8rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+        }
+
+        .platform-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .platform-btn.crunchyroll {
+            background: rgba(244, 117, 33, 0.1);
+            border-color: rgba(244, 117, 33, 0.3);
+        }
+
+        .platform-btn.crunchyroll:hover {
+            background: #f47521;
+        }
+
+        .platform-btn.netflix {
+            background: rgba(229, 9, 20, 0.1);
+            border-color: rgba(229, 9, 20, 0.3);
+        }
+
+        .platform-btn.netflix:hover {
+            background: #e50914;
+        }
+
+        .platform-btn.hulu {
+            background: rgba(28, 231, 131, 0.1);
+            border-color: rgba(28, 231, 131, 0.3);
+        }
+
+        .platform-btn.hulu:hover {
+            background: #1ce783;
+        }
+
+        .platform-btn.funimation {
+            background: rgba(0, 153, 255, 0.1);
+            border-color: rgba(0, 153, 255, 0.3);
+        }
+
+        .platform-btn.funimation:hover {
+            background: #0099ff;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .page-btn {
+            padding: 0.5rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--gray);
+            color: var(--light);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .page-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker);
+            padding: 3rem 2rem 1rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--gray);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section p, .footer-section a {
+            color: #aaa;
+            margin-bottom: 0.5rem;
+            display: block;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid var(--gray);
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                justify-content: center;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .anime-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .image-container {
+                height: 350px;
+            }
+            
+            .platform-buttons {
+                flex-direction: column;
+            }
+            
+            .platform-btn {
+                min-width: 100%;
+            }
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--gray);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* Error State */
+        .error-message {
+            text-align: center;
+            padding: 2rem;
+            color: var(--primary);
+            font-size: 1.2rem;
+            grid-column: 1 / -1;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--gray);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Search Platforms */
+        .search-platform {
+            background: var(--darker);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border: 1px solid var(--gray);
+            text-align: center;
+        }
+
+        .search-platform p {
+            color: #aaa;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .search-link {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .search-link:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+    </style>
 </head>
 <body>
-<h1>UNO Game</h1>
+    <!-- Header -->
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">🎌</div>
+                <h1>AnimeFiesta</h1>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="#home" class="active">Home</a></li>
+                    <li><a href="#library">Library</a></li>
+                    <li><a href="#discover">Discover</a></li>
+                    <li><a href="#stats">Stats</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-<div id="gameContainer">
-    <div id="discardPile">Discard: <span id="discardCard">-</span></div>
-    <div id="drawPile"><button id="drawBtn">Draw Card</button></div>
-    <p id="message"></p>
-    <h2>Your Hand:</h2>
-    <div id="playerHand"></div>
-</div>
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <h2>Track & Watch Your Favorite Anime</h2>
+            <p>Discover, organize, and track 100+ anime series. Click any anime to watch instantly on your preferred streaming platform!</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-number">100</span>
+                    <span class="stat-label">Anime Series</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">24</span>
+                    <span class="stat-label">Genres</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">15</span>
+                    <span class="stat-label">Years Covered</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">8.4</span>
+                    <span class="stat-label">Avg Rating</span>
+                </div>
+            </div>
+        </section>
 
-<script src="script.js"></script>
-</body>
-</html>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #111; /* Dark background */
-    color: #fff;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-}
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+            <div class="stat-card">
+                <h3>Currently Watching</h3>
+                <div class="number" id="watchingCount">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Completed</h3>
+                <div class="number" id="completedCount">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Plan to Watch</h3>
+                <div class="number" id="planningCount">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Episodes</h3>
+                <div class="number" id="totalEpisodes">0</div>
+            </div>
+        </div>
 
-h1 {
-    margin-top: 20px;
-    color: #ff4757;
-}
+        <!-- Filters -->
+        <section class="filters">
+            <div class="filter-group">
+                <label for="genreFilter">Filter by Genre:</label>
+                <select id="genreFilter">
+                    <option value="all">All Genres</option>
+                    <option value="Action">Action</option>
+                    <option value="Adventure">Adventure</option>
+                    <option value="Fantasy">Fantasy</option>
+                    <option value="Sci-Fi">Sci-Fi</option>
+                    <option value="Drama">Drama</option>
+                    <option value="Comedy">Comedy</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Mystery">Mystery</option>
+                    <option value="Supernatural">Supernatural</option>
+                    <option value="Horror">Horror</option>
+                </select>
+                
+                <label for="yearFilter">Year:</label>
+                <select id="yearFilter">
+                    <option value="all">All Years</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2020">2020</option>
+                    <option value="2019">2019</option>
+                    <option value="2018">2018</option>
+                    <option value="2017">2017</option>
+                </select>
+                
+                <label for="statusFilter">Status:</label>
+                <select id="statusFilter">
+                    <option value="all">All Status</option>
+                    <option value="watching">Currently Watching</option>
+                    <option value="completed">Completed</option>
+                    <option value="planning">Plan to Watch</option>
+                </select>
+                
+                <button class="btn" id="applyFilters">Apply Filters</button>
+                <button class="btn" id="resetFilters">Reset</button>
+            </div>
+        </section>
 
-#gameContainer {
-    margin: 20px auto;
-    width: 90%;
-}
+        <!-- Anime Grid -->
+        <section id="animeGrid">
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+        </section>
 
-#discardPile, #drawPile {
-    margin: 15px;
-    font-size: 18px;
-}
+        <!-- Pagination -->
+        <div class="pagination" id="pagination">
+            <!-- Pagination buttons will be generated here -->
+        </div>
+    </div>
 
-#playerHand {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 10px;
-}
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About AnimeFiesta</h4>
+                <p>Your ultimate anime tracking and watching companion. Click any anime to watch instantly on streaming platforms.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="#home">Home</a>
+                <a href="#library">My Library</a>
+                <a href="#discover">Discover</a>
+                <a href="#stats">Statistics</a>
+            </div>
+            <div class="footer-section">
+                <h4>Streaming Platforms</h4>
+                <a href="https://www.crunchyroll.com" target="_blank">Crunchyroll</a>
+                <a href="https://www.netflix.com" target="_blank">Netflix</a>
+                <a href="https://www.hulu.com" target="_blank">Hulu</a>
+                <a href="https://www.funimation.com" target="_blank">Funimation</a>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>Email: support@animefiesta.com</p>
+                <p>Discord: AnimeFiesta Community</p>
+                <p>Twitter: @AnimeFiesta</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2024 AnimeFiesta. All rights reserved. All anime content is property of their respective owners.</p>
+        </div>
+    </footer>
 
-.card {
-    width: 80px;
-    height: 120px;
-    margin: 5px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 20px;
-    font-weight: bold;
-    color: #fff;
-    cursor: pointer;
-    border: 2px solid #fff;
-    user-select: none;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 10px #fff;
-}
-
-.red { background-color: #e74c3c; }
-.blue { background-color: #3498db; }
-.green { background-color: #2ecc71; }
-.yellow { background-color: #f1c40f; color: #000; }
-.black { background-color: #333; color: #fff; }
-
-#drawBtn {
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    background-color: #ff4757;
-    color: white;
-}
-
-#drawBtn:hover {
-    background-color: #ff6b81;
-}
-
-#message {
-    font-size: 18px;
-    margin-top: 10px;
-}
-// UNO Game Logic
-
-const colors = ["red","blue","green","yellow"];
-const numbers = Array.from({length:10},(_,i)=>i);
-const specials = ["Skip","Reverse","+2"];
-const wilds = ["Wild","Wild+4"];
-
-let deck = [], discardPile = [];
-let playerHand = [], aiHands = [[],[],[]];
-let turn = 0; // 0 = player, 1-3 = AI
-let direction = 1; // 1 = clockwise
-
-const message = document.getElementById("message");
-const discardCardSpan = document.getElementById("discardCard");
-const playerHandDiv = document.getElementById("playerHand");
-const drawBtn = document.getElementById("drawBtn");
-
-// Initialize deck
-function initDeck(){
-    deck = [];
-    colors.forEach(color=>{
-        numbers.forEach(n=>deck.push({color,type:"number",value:n}));
-        specials.forEach(s=>deck.push({color,type:"special",value:s}));
-    });
-    wilds.forEach(w=>deck.push({color:"black",type:"wild",value:w}));
-    shuffle(deck);
-}
-
-// Shuffle function
-function shuffle(array){
-    for(let i=array.length-1;i>0;i--){
-        const j=Math.floor(Math.random()*(i+1));
-        [array[i],array[j]]=[array[j],array[i]];
-    }
-}
-
-// Deal hands
-function dealHands(){
-    playerHand = [];
-    aiHands = [[],[],[]];
-    for(let i=0;i<7;i++){
-        playerHand.push(deck.pop());
-        aiHands.forEach(hand=>hand.push(deck.pop()));
-    }
-    discardPile.push(deck.pop());
-    updateDisplay();
-}
-
-// Update UI
-function updateDisplay(){
-    const top = discardPile[discardPile.length-1];
-    discardCardSpan.textContent = top ? `${top.color} ${top.value}` : "-";
-
-    playerHandDiv.innerHTML = "";
-    playerHand.forEach((card,index)=>{
-        const cardDiv = document.createElement("div");
-        cardDiv.className = "card " + card.color;
-        cardDiv.textContent = card.value;
-        cardDiv.onclick = ()=>playerPlay(index);
-        playerHandDiv.appendChild(cardDiv);
-    });
-}
-
-// Check playable card
-function playable(card){
-    const top = discardPile[discardPile.length-1];
-    return card.color === top.color || card.value === top.value || card.color === "black";
-}
-
-// Player plays card
-function playerPlay(index){
-    const card = playerHand[index];
-    if(!playable(card)){
-        message.textContent = "Invalid move! Match color or number.";
-        return;
-    }
-    playCard(card,playerHand,index);
-}
-
-// Play card logic
-function playCard(card,hand,index){
-    discardPile.push(card);
-    hand.splice(index,1);
-    message.textContent = `Played ${card.color} ${card.value}`;
-
-    applySpecial(card);
-    updateDisplay();
-    checkWin();
-    nextTurn();
-}
-
-// Apply special card effects
-function applySpecial(card){
-    if(card.type==="special"){
-        if(card.value==="Skip") turn = nextPlayer(); // skip next
-        if(card.value==="Reverse") direction *= -1;
-        if(card.value==="+2") drawCards(nextPlayer(),2);
-    }
-    if(card.type==="wild"){
-        if(card.value==="Wild+4") drawCards(nextPlayer(),4);
-        // prompt player to choose color
-        if(turn===0){
-            let color = prompt("Choose color: red, blue, green, yellow").toLowerCase();
-            if(colors.includes(color)) discardPile[discardPile.length-1].color = color;
-        } else {
-            // AI chooses random color
-            discardPile[discardPile.length-1].color = colors[Math.floor(Math.random()*4)];
-        }
-    }
-}
-
-// Get next player
-function nextPlayer(){
-    return (turn + direction + 4) % 4;
-}
-
-// Advance turn
-function nextTurn(){
-    turn = nextPlayer();
-    if(turn!==0) setTimeout(aiPlay, 500);
-}
-
-// AI logic
-function aiPlay(){
-    const hand = aiHands[turn-1];
-    const card = hand.find(playable);
-    if(card){
-        const idx = hand.indexOf(card);
-        playCard(card,hand,idx);
-    } else {
-        drawCards(turn,1);
-        message.textContent = `AI ${turn} drew a card`;
-        setTimeout(nextTurn, 500);
-    }
-}
-
-// Draw cards
-function drawCards(playerIdx,count){
-    for(let i=0;i<count;i++){
-        if(deck.length===0) reshuffle();
-        const card = deck.pop();
-        if(playerIdx===0) playerHand.push(card);
-        else aiHands[playerIdx-1].push(card);
-    }
-    updateDisplay();
-}
-
-// Reshuffle discard pile
-function reshuffle(){
-    const top = discardPile.pop();
-    deck = discardPile;
-    discardPile = [top];
-    shuffle(deck);
-}
-
-// Check win
-function checkWin(){
-    if(playerHand.length===0){ alert("You Win!"); initGame(); }
-    aiHands.forEach((hand,i)=>{
-        if(hand.length===0){ alert(`AI ${i+1} Wins!`); initGame(); }
-    });
-}
-
-// Draw button
-drawBtn.onclick = ()=>{
-    drawCards(0,1);
-    message.textContent = "You drew a card";
-    nextTurn();
-};
-
-// Initialize game
-function initGame(){
-    initDeck();
-    dealHands();
-    turn = 0;
-    direction = 1;
-    message.textContent = "Your Turn!";
-}
-
-// Start game
-initGame();
+    <script>
+        // Anime Database with 100 entries and streaming links
+        const animeDatabase = [
+            {
+                id: 1,
+                title: "Attack on Titan",
+                year: 2013,
+                episodes: 75,
+                status: "completed",
+                rating: 9.0,
+                genres: ["Action", "Fantasy", "Drama"],
+                description: "Humanity's last stand against man-eating Titans in a post-apocalyptic world.",
+                image: "https://cdn.myanimelist.net/images/anime/10/47347.jpg",
+                streamingLinks: {
+                    crunchyroll: "https://www.crunchyroll.com/attack-on-titan",
+                    netflix: "https://www.netflix.com/title/70299043",
+                    hulu: "https://www.hulu.com/series/attack-on-titan-76fdd505-2c44-43fc-b6c8-4c0b15a7d119",
+                    funimation: "https://www.funimation.com/shows/attack-on-titan/"
+                }
+            },
+            {
+                id: 2,
+                title: "Demon Slayer: Kimetsu no Yaiba",
+                year: 2019,
+                episodes: 55,
+                status: "watching",
+                rating: 8.7,
+                genres: ["Action", "Supernatural", "Historical"],
+                description: "A kind-hearted boy becomes a demon slayer after his family is slaughtered.",
+                image: "https://cdn.myanimelist.net/images/anime/1286/99889.jpg",
+                streamingLinks: {
+                    crunchyroll: "https://www.crunchyroll.com/demon-slayer-kimetsu-no-yaiba",
+                    netflix: "https://www.netflix.com/title/81091393",
+                    hulu: "https://www.hulu.com/series/demon-slayer-kimetsu-no-yaiba-76fdd505-2c44-43fc-b6c8-4c0b15a7d119",
+                    funimation: "https://www.funimation.com/shows/demon-slayer-kimetsu-no-yaiba/"
+                }
+            },
+            {
+                id: 3,
+                title: "Jujutsu Kaisen",
+                year: 2020,
+                episodes: 47,
+                status: "watching",
+                rating: 8.6,
+                genres: ["Action", "Supernatural", "Horror"],
+                description: "A boy eats a cursed finger and becomes host to a powerful curse.",
+                image: "https://cdn.myanimelist.net/images/anime/1171/109222.jpg",
+                streamingLinks: {
+                    crunchyroll: "https://www.crunchyroll.com/jujutsu-kaisen",
+                    netflix: "https://www.netflix.com/title/81278456",
+                    hulu: "https://www.hulu.com/series/jujutsu-kaisen-76fdd505-2c44-43fc-b6c8-4c0b15a7d119",
+                    funimation: "https://www.funimation.com/shows/jujutsu-kaisen/"
+                }
+            },
+            {
+                id: 4,
+                title: "My Hero Academia",
+                year: 2016,
+                episodes: 138,
+                status: "watching",
+                rating: 8.4,
+                genres: ["Action", "Superhero", "School"],
+                description: "A Quirkless boy inherits powers and joins a prestigious hero academy.",
+                image: "https://cdn.myanimelist.net/images/anime/10/78745.jpg",
+                streamingLinks: {
+                    crunchyroll: "https://www.crunchyroll.com/my-hero-academia",
+                    netflix: "https://www.netflix.com/title/80135674",
+                    hulu: "https://www.hulu.com/series/my-hero-academia-76fdd505-2c44-43fc-b6c8-4c0b15a7d119",
+                    funimation: "https://www.funimation.com/shows/my-hero-academia/"
+                }
+            },
+            {
+                id: 5,
+                title: "One Piece",
+                year: 1999,
+                episodes: 1100,
+                status: "watching",
+                rating: 8.7,
+                genres: ["Action", "Adventure", "Fantasy"],
+                description: "Monkey D. Luffy searches for the ultimate treasure to become Pirate King.",
+                image: "https://cdn.myanimelist.net/images/anime/6/73245.jpg",
+                streamingLinks: {
+                    crunchyroll: "https://www.crunchyroll.com/one-piece",
+                    netflix: "https://www.netflix.com/title/80217863",
+                    hulu: "https://www.hulu.com/series/one-piece-76fdd505-2c44-43fc-b6c8-4c0b15a7d119",
+                    funimation: "https://www.funimation.com/shows/one-piece/"
+                }
+            },
+            {
+                id: 6,
+                title: "Death Note",
+                year: 2006,
+                episodes: 37,
+                status: "completed",
+                rating: 8.6,
+                genres: ["Mystery", "Supernatural", "Thriller"],
+                description: "A high school student discovers a notebook that can kill anyone.",
+                image: "https://cdn.myanimelist.net/images/anime/9/9453.jpg",
+                streamingLinks: {
+                    crunchyroll: "https://www.crunchyroll.com/death-note",
+                    netflix: "https://www.netflix.com/title/70204970",
+                    hulu: "https://www.hulu.com/series/death-note-76fdd505-2c44-43fc-b6c8-4c0b15a7d119"
+                }
+            },
+            {
+                id: 7,
+                title: "Fullmetal Alchemist: Brotherhood",
+                year: 2009,
+                episodes: 64,
+                status: "completed",
+                rating: 9.1,
+                genres: ["Action", "Adventure", "Drama"],
+                description: "Two brothers search for the Philosopher's Stone to restore their bodies.",
+                image: "https://cdn.myanimelist.net/images/anime/1208/94745.jpg",
+                streamingLinks: {
+                    crunchyroll: "https://www.crunchyroll.com/fullmetal-alchemist-brotherhood",
+                    netflix: "https://www.netflix.com/title/70204981",
+                    hulu: "https://www.hulu.com/series/fullmetal-alchemist-brotherhood-76fdd505-2c44-43fc-b6c8-4c0b15a7d119",
+                    funimation: "https://www.funimation.com/shows/fullmetal-alchemist-brotherhood/"
+                }
+            },
+            {
+                id: 8,
+                title: "Naruto Shippuden",
+                year: 2007,
+                episodes: 500,
+                status: "completed",
+                rating: 8.3,
+                genres: ["Action", "Adventure", "Martial Arts"],
+                description: "Naruto Uzumaki's journey to become Hokage and protect his village.",
+                image: "https://cdn.myanimelist.net/images/anime/1565/111305.jpg",
+                streamingLinks: {
+                    crunchyroll: "https://www.crunchyroll.com/naruto-shippuden",
+                    netflix: "https://www.netflix.com/title/70205012",
+                    hulu: "https://www.hulu.com/series/naruto-shippuden-76fdd505-2c44-43fc-b6c8-4c0b15a7d119"
+                }
+            },
+            {
+                id: 9,
+                title: "Hunter x Hunter",
+                year: 2011,
+                episodes: 148,
+                status: "completed",
+                rating: 9.0,
+                genres: ["Action", "Adventure", "Fantasy"],
+                description: "Gon Freecss becomes a Hunter to find his missing father.",
+                image: "https://cdn.myanimelist.net/images/anime/1337/99013.jpg",
+                streamingLinks: {
+                    crunchyroll: "https://www.crunchyroll.com/hunter-x-hunter",
+                    netflix: "https://www.netflix.com/title/81218497",
+                    hulu: "https://www.hulu.com/series/hunter-x-hunter-76fdd505-2c44-43fc-b6c8-4c0b15a7d119"
+                }
+            },
+            {
+                id: 10,
+                title: "Tokyo Revengers",
+                year: 2021,
+                episodes: 37,
+                status: "watching",
+                rating: 8.0,
+                genres: ["Action", "Drama", "Supernatural"],
+                description: "A loser travels back in time to save his girlfriend and change his life.",
+                image: "https://cdn.myanimelist.net/images/anime/1830/117773.jpg",
+                streamingLinks: {
+                    crunchyroll: "https://www.crunchyroll.com/tokyo-revengers",
+                    hulu: "https://www.hulu.com/series/tokyo-revengers-76fdd505-2c44-43fc-b6c8-4c0b15a7d119",
+                    disneyplus: "https://www.disneyplus.com/series/tokyo-revengers/6Q0gyC8e0M6E"
+                }
+            },
+            // Add streaming links for all remaining anime...
+            {
+                id: 11,
+                title: "Chainsaw Man",
+                year: 2022,
+                episodes: 12,
+                status: "completed",
+                rating: 8.5,
+                genres: ["Action", "Horror", "Supernatural"],
+                description: "A poor young man becomes a devil hunter to pay off his debts.",
+                image: "https://cdn.myanimelist.net/images/anime/1806/126216.jpg",
+                streamingLinks: {
+                    crunchyroll: "https://www.crunchyroll.com/chainsaw-man",
+                    hulu: "https://www.hulu.com/series/chainsaw-man-76fdd505-2c44-43fc-b6c8-4c0b15a7d119"
+                }
+            },
+            {
+                id: 12,
+                title: "Spy x Family",
+                year: 2022,
+                episodes: 25,
+                status: "watching",
+                rating: 8.5,
+                genres: ["Action", "Comedy", "Slice of Life"],
+                description: "A spy creates a fake family, unaware they have secrets too.",
+                image: "https://cdn.myanimelist.net/images/anime/1441

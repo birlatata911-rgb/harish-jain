@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Harish Anime Tracker</title>
+<link rel="icon" href="https://cdn-icons-png.flaticon.com/512/616/616430.png">
+
+<style>
+body{
+    margin:0;
+    background:#0b0b0b;
+    color:white;
+    font-family:Arial, sans-serif;
+}
+header{
+    background:#111;
+    padding:15px;
+    text-align:center;
+    border-bottom:2px solid #ff4757;
+}
+h1{color:#ff4757;margin:0;}
+.search-box{margin-top:10px;}
+.search-box input{
+    padding:10px;
+    width:300px;
+    max-width:90%;
+    border-radius:20px;
+    border:none;
+    outline:none;
+}
+
+.section-title{
+    margin:20px;
+    color:#ff6b81;
+    font-size:22px;
+}
+
+.anime-row{
+    display:flex;
+    overflow-x:auto;
+    gap:15px;
+    padding:0 20px 20px;
+}
+.anime-row::-webkit-scrollbar{height:8px;}
+.anime-row::-webkit-scrollbar-thumb{background:#ff4757;border-radius:10px;}
+
+.card{
+    min-width:180px;
+    background:#151515;
+    border-radius:12px;
+    overflow:hidden;
+    border:1px solid #333;
+    transition:0.2s;
+}
+.card:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 12px #ff4757;
+}
+.card img{
+    width:100%;
+    height:260px;
+    object-fit:cover;
+}
+.info{
+    padding:8px;
+}
+.info h3{
+    font-size:14px;
+    color:#ff6b81;
+    margin:5px 0;
+}
+.info p{
+    font-size:11px;
+    color:#ccc;
+    margin:3px 0;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Harish Anime Tracker</h1>
+    <p>Explore anime by category</p>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search anime title...">
+    </div>
+</header>
+
+<div id="content"></div>
+
+<script>
+const content = document.getElementById("content");
+const searchInput = document.getElementById("searchInput");
+
+const categories = [
+  { title:"🔥 Trending", sort:"TRENDING_DESC" },
+  { title:"⚔️ Action", genre:"Action" },
+  { title:"😂 Comedy", genre:"Comedy" },
+  { title:"💖 Romance", genre:"Romance" },
+  { title:"🌌 Fantasy", genre:"Fantasy" }
+];
+
+// Load category section
+async function loadCategory(cat){
+    const query = `
+    query ($genre:String, $sort:[MediaSort]) {
+      Page(perPage:20) {
+        media(type:ANIME, genre:$genre, sort:$sort) {
+          title { romaji }
+          coverImage { large }
+          averageScore
+        }
+      }
+    }`;
+
+    const res = await fetch("https://graphql.anilist.co",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({
+            query,
+            variables:{
+                genre: cat.genre || null,
+                sort: cat.sort ? [cat.sort] : ["POPULARITY_DESC"]
+            }
+        })
+    });
+
+    const data = await res.json();
+
+    const title = document.createElement("h2");
+    title.className="section-title";
+    title.textContent = cat.title;
+
+    const row = document.createElement("div");
+    row.className="anime-row";
+
+    data.data.Page.media.forEach(a=>{
+        const card = document.createElement("div");
+        card.className="card";
+        card.innerHTML = `
+            <img src="${a.coverImage.large}">
+            <div class="info">
+                <h3>${a.title.romaji}</h3>
+                <p>⭐ ${a.averageScore ?? "?"}</p>
+            </div>
+        `;
+        row.appendChild(card);
+    });
+
+    content.appendChild(title);
+    content.appendChild(row);
+}
+
+// Load all categories
+categories.forEach(loadCategory);
+
+// SEARCH FUNCTION
+searchInput.addEventListener("keyup", async (e)=>{
+    const term = e.target.value;
+    if(term.length < 2) return;
+
+    content.innerHTML = "";
+    const query = `
+    query ($search:String) {
+      Page(perPage:30) {
+        media(type:ANIME, search:$search) {
+          title { romaji }
+          coverImage { large }
+          averageScore
+        }
+      }
+    }`;
+
+    const res = await fetch("https://graphql.anilist.co",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({ query, variables:{ search:term } })
+    });
+
+    const data = await res.json();
+
+    const title = document.createElement("h2");
+    title.className="section-title";
+    title.textContent = `🔍 Search Results`;
+
+    const row = document.createElement("div");
+    row.className="anime-row";
+
+    data.data.Page.media.forEach(a=>{
+        const card = document.createElement("div");
+        card.className="card";
+        card.innerHTML = `
+            <img src="${a.coverImage.large}">
+            <div class="info">
+                <h3>${a.title.romaji}</h3>
+                <p>⭐ ${a.averageScore ?? "?"}</p>
+            </div>
+        `;
+        row.appendChild(card);
+    });
+
+    content.appendChild(title);
+    content.appendChild(row);
+});
+</script>
+
+</body>
+</html>

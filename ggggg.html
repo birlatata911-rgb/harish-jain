@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Harish Anime Tracker</title>
+<link rel="icon" href="https://cdn-icons-png.flaticon.com/512/616/616430.png">
+
+<style>
+body{
+    margin:0;
+    background:#0b0b0b;
+    color:white;
+    font-family:Arial, sans-serif;
+}
+header{
+    background:#111;
+    padding:15px;
+    text-align:center;
+    border-bottom:2px solid #ff4757;
+}
+h1{
+    margin:0;
+    color:#ff4757;
+}
+.search-box{
+    margin-top:10px;
+}
+.search-box input{
+    width:300px;
+    max-width:90%;
+    padding:10px;
+    border-radius:20px;
+    border:none;
+    outline:none;
+}
+
+#grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:20px;
+    padding:20px;
+}
+
+.card{
+    background:#151515;
+    border-radius:12px;
+    overflow:hidden;
+    border:1px solid #333;
+    transition:0.2s;
+}
+.card:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 15px #ff4757;
+}
+.card img{
+    width:100%;
+    height:320px;
+    object-fit:cover;
+}
+.info{
+    padding:10px;
+}
+.info h3{
+    color:#ff6b81;
+    font-size:15px;
+    margin:5px 0;
+}
+.info p{
+    font-size:12px;
+    color:#ddd;
+    margin:4px 0;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Harish Anime Tracker</h1>
+    <p>Search & explore thousands of anime</p>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search anime title...">
+    </div>
+</header>
+
+<div id="grid"></div>
+
+<script>
+let page = 1;
+let searchTerm = "";
+const grid = document.getElementById("grid");
+const searchInput = document.getElementById("searchInput");
+
+// Fetch anime from AniList
+async function loadAnime(reset=false){
+    const query = `
+    query ($page:Int, $search:String) {
+      Page(page:$page, perPage:20) {
+        media(type:ANIME, search:$search, sort:POPULARITY_DESC) {
+          title { romaji }
+          description
+          episodes
+          averageScore
+          coverImage { large }
+        }
+      }
+    }`;
+
+    const res = await fetch("https://graphql.anilist.co",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({
+            query,
+            variables:{ page, search: searchTerm }
+        })
+    });
+
+    const data = await res.json();
+
+    data.data.Page.media.forEach(a=>{
+        const card = document.createElement("div");
+        card.className="card";
+        card.innerHTML = `
+            <img src="${a.coverImage.large}">
+            <div class="info">
+                <h3>${a.title.romaji}</h3>
+                <p><b>Episodes:</b> ${a.episodes ?? "N/A"}</p>
+                <p><b>Rating:</b> ⭐ ${a.averageScore ?? "?"}</p>
+                <p>${(a.description || "").replace(/<[^>]*>/g,"").slice(0,120)}...</p>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+
+    page++;
+}
+
+// Infinite scroll
+window.addEventListener("scroll",()=>{
+    if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 200){
+        loadAnime();
+    }
+});
+
+// Search
+searchInput.addEventListener("keyup",(e)=>{
+    searchTerm = e.target.value;
+    page = 1;
+    grid.innerHTML = "";
+    loadAnime(true);
+});
+
+// Initial load
+loadAnime();
+</script>
+
+</body>
+</html>
