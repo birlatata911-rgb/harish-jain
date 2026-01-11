@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimeFiesta - Ultimate Anime Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+            --accent: #45b7d1;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --light: #f8f9fa;
+            --gray: #2d3436;
+            --card-bg: #1a1a1a;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: linear-gradient(135deg, var(--darker), var(--gray));
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+
+        nav ul {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        nav a.active {
+            color: var(--primary);
+            background: rgba(255, 107, 107, 0.15);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(10, 10, 10, 0.9), rgba(10, 10, 10, 0.9)),
+                        url('https://images.unsplash.com/photo-1639322537228-f710d846310a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            padding: 4rem 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            border: 1px solid var(--gray);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            color: #ccc;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            color: #aaa;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Filters */
+        .filters {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--gray);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        select, input, button {
+            padding: 0.7rem 1rem;
+            background: var(--darker);
+            border: 1px solid var(--gray);
+            border-radius: 5px;
+            color: var(--light);
+            font-size: 1rem;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.2);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Anime Grid */
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .anime-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--gray);
+            position: relative;
+        }
+
+        .anime-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+            border-color: var(--primary);
+        }
+
+        .image-container {
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 2px solid var(--primary);
+            background: linear-gradient(45deg, var(--darker), var(--gray));
+        }
+
+        .anime-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .anime-card:hover .anime-image {
+            transform: scale(1.05);
+        }
+
+        .anime-info {
+            padding: 1.5rem;
+        }
+
+        .anime-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--light);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .anime-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .anime-description {
+            color: #ccc;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .anime-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .anime-status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-watching {
+            background: rgba(78, 205, 196, 0.2);
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+        }
+
+        .status-completed {
+            background: rgba(69, 183, 209, 0.2);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .status-planning {
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .rating {
+            color: #ffd700;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .page-btn {
+            padding: 0.5rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--gray);
+            color: var(--light);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .page-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker);
+            padding: 3rem 2rem 1rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--gray);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section p, .footer-section a {
+            color: #aaa;
+            margin-bottom: 0.5rem;
+            display: block;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid var(--gray);
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                justify-content: center;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .anime-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .image-container {
+                height: 350px;
+            }
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--gray);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* Error State */
+        .error-message {
+            text-align: center;
+            padding: 2rem;
+            color: var(--primary);
+            font-size: 1.2rem;
+            grid-column: 1 / -1;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--gray);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">🎌</div>
+                <h1>AnimeFiesta</h1>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="#home" class="active">Home</a></li>
+                    <li><a href="#library">Library</a></li>
+                    <li><a href="#discover">Discover</a></li>
+                    <li><a href="#stats">Stats</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <h2>Track Your Anime Journey</h2>
+            <p>Discover, organize, and track 100+ anime series with detailed information, ratings, and personalized recommendations. Your ultimate anime companion.</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-number">100</span>
+                    <span class="stat-label">Anime Series</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">24</span>
+                    <span class="stat-label">Genres</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">15</span>
+                    <span class="stat-label">Years Covered</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">8.4</span>
+                    <span class="stat-label">Avg Rating</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+            <div class="stat-card">
+                <h3>Currently Watching</h3>
+                <div class="number" id="watchingCount">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Completed</h3>
+                <div class="number" id="completedCount">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Plan to Watch</h3>
+                <div class="number" id="planningCount">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Episodes</h3>
+                <div class="number" id="totalEpisodes">0</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <section class="filters">
+            <div class="filter-group">
+                <label for="genreFilter">Filter by Genre:</label>
+                <select id="genreFilter">
+                    <option value="all">All Genres</option>
+                    <option value="Action">Action</option>
+                    <option value="Adventure">Adventure</option>
+                    <option value="Fantasy">Fantasy</option>
+                    <option value="Sci-Fi">Sci-Fi</option>
+                    <option value="Drama">Drama</option>
+                    <option value="Comedy">Comedy</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Mystery">Mystery</option>
+                    <option value="Supernatural">Supernatural</option>
+                    <option value="Horror">Horror</option>
+                </select>
+                
+                <label for="yearFilter">Year:</label>
+                <select id="yearFilter">
+                    <option value="all">All Years</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2020">2020</option>
+                    <option value="2019">2019</option>
+                    <option value="2018">2018</option>
+                    <option value="2017">2017</option>
+                </select>
+                
+                <label for="statusFilter">Status:</label>
+                <select id="statusFilter">
+                    <option value="all">All Status</option>
+                    <option value="watching">Currently Watching</option>
+                    <option value="completed">Completed</option>
+                    <option value="planning">Plan to Watch</option>
+                </select>
+                
+                <button class="btn" id="applyFilters">Apply Filters</button>
+                <button class="btn" id="resetFilters">Reset</button>
+            </div>
+        </section>
+
+        <!-- Anime Grid -->
+        <section id="animeGrid">
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+        </section>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination">
+            <!-- Pagination buttons will be generated here -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About AnimeFiesta</h4>
+                <p>Your ultimate anime tracking companion. Discover, organize, and track your anime journey with detailed insights and personalized recommendations.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="#home">Home</a>
+                <a href="#library">My Library</a>
+                <a href="#discover">Discover</a>
+                <a href="#stats">Statistics</a>
+            </div>
+            <div class="footer-section">
+                <h4>Genres</h4>
+                <a href="#">Action</a>
+                <a href="#">Romance</a>
+                <a href="#">Fantasy</a>
+                <a href="#">Sci-Fi</a>
+                <a href="#">Mystery</a>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>Email: support@animefiesta.com</p>
+                <p>Discord: AnimeFiesta Community</p>
+                <p>Twitter: @AnimeFiesta</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2024 AnimeFiesta. All rights reserved. All anime content is property of their respective owners.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Anime Database with 100 entries - Using reliable image sources
+        const animeDatabase = [
+            {
+                id: 1,
+                title: "Attack on Titan",
+                year: 2013,
+                episodes: 75,
+                status: "completed",
+                rating: 9.0,
+                genres: ["Action", "Fantasy", "Drama"],
+                description: "Humanity's last stand against man-eating Titans in a post-apocalyptic world.",
+                image: "https://cdn.myanimelist.net/images/anime/10/47347.jpg"
+            },
+            {
+                id: 2,
+                title: "Demon Slayer: Kimetsu no Yaiba",
+                year: 2019,
+                episodes: 55,
+                status: "watching",
+                rating: 8.7,
+                genres: ["Action", "Supernatural", "Historical"],
+                description: "A kind-hearted boy becomes a demon slayer after his family is slaughtered.",
+                image: "https://cdn.myanimelist.net/images/anime/1286/99889.jpg"
+            },
+            {
+                id: 3,
+                title: "Jujutsu Kaisen",
+                year: 2020,
+                episodes: 47,
+                status: "watching",
+                rating: 8.6,
+                genres: ["Action", "Supernatural", "Horror"],
+                description: "A boy eats a cursed finger and becomes host to a powerful curse.",
+                image: "https://cdn.myanimelist.net/images/anime/1171/109222.jpg"
+            },
+            {
+                id: 4,
+                title: "My Hero Academia",
+                year: 2016,
+                episodes: 138,
+                status: "watching",
+                rating: 8.4,
+                genres: ["Action", "Superhero", "School"],
+                description: "A Quirkless boy inherits powers and joins a prestigious hero academy.",
+                image: "https://cdn.myanimelist.net/images/anime/10/78745.jpg"
+            },
+            {
+                id: 5,
+                title: "One Piece",
+                year: 1999,
+                episodes: 1100,
+                status: "watching",
+                rating: 8.7,
+                genres: ["Action", "Adventure", "Fantasy"],
+                description: "Monkey D. Luffy searches for the ultimate treasure to become Pirate King.",
+                image: "https://cdn.myanimelist.net/images/anime/6/73245.jpg"
+            },
+            {
+                id: 6,
+                title: "Death Note",
+                year: 2006,
+                episodes: 37,
+                status: "completed",
+                rating: 8.6,
+                genres: ["Mystery", "Supernatural", "Thriller"],
+                description: "A high school student discovers a notebook that can kill anyone.",
+                image: "https://cdn.myanimelist.net/images/anime/9/9453.jpg"
+            },
+            {
+                id: 7,
+                title: "Fullmetal Alchemist: Brotherhood",
+                year: 2009,
+                episodes: 64,
+                status: "completed",
+                rating: 9.1,
+                genres: ["Action", "Adventure", "Drama"],
+                description: "Two brothers search for the Philosopher's Stone to restore their bodies.",
+                image: "https://cdn.myanimelist.net/images/anime/1208/94745.jpg"
+            },
+            {
+                id: 8,
+                title: "Naruto Shippuden",
+                year: 2007,
+                episodes: 500,
+                status: "completed",
+                rating: 8.3,
+                genres: ["Action", "Adventure", "Martial Arts"],
+                description: "Naruto Uzumaki's journey to become Hokage and protect his village.",
+                image: "https://cdn.myanimelist.net/images/anime/1565/111305.jpg"
+            },
+            {
+                id: 9,
+                title: "Hunter x Hunter",
+                year: 2011,
+                episodes: 148,
+                status: "completed",
+                rating: 9.0,
+                genres: ["Action", "Adventure", "Fantasy"],
+                description: "Gon Freecss becomes a Hunter to find his missing father.",
+                image: "https://cdn.myanimelist.net/images/anime/1337/99013.jpg"
+            },
+            {
+                id: 10,
+                title: "Tokyo Revengers",
+                year: 2021,
+                episodes: 37,
+                status: "watching",
+                rating: 8.0,
+                genres: ["Action", "Drama", "Supernatural"],
+                description: "A loser travels back in time to save his girlfriend and change his life.",
+                image: "https://cdn.myanimelist.net/images/anime/1830/117773.jpg"
+            },
+            {
+                id: 11,
+                title: "Chainsaw Man",
+                year: 2022,
+                episodes: 12,
+                status: "completed",
+                rating: 8.5,
+                genres: ["Action", "Horror", "Supernatural"],
+                description: "A poor young man becomes a devil hunter to pay off his debts.",
+                image: "https://cdn.myanimelist.net/images/anime/1806/126216.jpg"
+            },
+            {
+                id: 12,
+                title: "Spy x Family",
+                year: 2022,
+                episodes: 25,
+                status: "watching",
+                rating: 8.5,
+                genres: ["Action", "Comedy", "Slice of Life"],
+                description: "A spy creates a fake family, unaware they have secrets too.",
+                image: "https://cdn.myanimelist.net/images/anime/1441/122795.jpg"
+            },
+            {
+                id: 13,
+                title: "Vinland Saga",
+                year: 2019,
+                episodes: 48,
+                status: "completed",
+                rating: 8.8,
+                genres: ["Action", "Adventure", "Historical"],
+                description: "A young Viking seeks revenge for his father's death.",
+                image: "https://cdn.myanimelist.net/images/anime/1500/103005.jpg"
+            },
+            {
+                id: 14,
+                title: "Mob Psycho 100",
+                year: 2016,
+                episodes: 37,
+                status: "completed",
+                rating: 8.5,
+                genres: ["Action", "Comedy", "Supernatural"],
+                description: "A powerful psychic tries to live a normal life.",
+                image: "https://cdn.myanimelist.net/images/anime/8/80356.jpg"
+            },
+            {
+                id: 15,
+                title: "One Punch Man",
+                year: 2015,
+                episodes: 24,
+                status: "completed",
+                rating: 8.7,
+                genres: ["Action", "Comedy", "Superhero"],
+                description: "A hero who can defeat any opponent with one punch.",
+                image: "https://cdn.myanimelist.net/images/anime/12/76049.jpg"
+            },
+            {
+                id: 16,
+                title: "Steins;Gate",
+                year: 2011,
+                episodes: 24,
+                status: "completed",
+                rating: 9.1,
+                genres: ["Sci-Fi", "Thriller", "Drama"],
+                description: "Friends accidentally invent time travel with dangerous consequences.",
+                image: "https://cdn.myanimelist.net/images/anime/1935/127974.jpg"
+            },
+            {
+                id: 17,
+                title: "Code Geass: Lelouch of the Rebellion",
+                year: 2006,
+                episodes: 50,
+                status: "completed",
+                rating: 8.7,
+                genres: ["Action", "Mecha", "Military"],
+                description: "A prince gains a power that lets him command anyone.",
+                image: "https://cdn.myanimelist.net/images/anime/5/50331.jpg"
+            },
+            {
+                id: 18,
+                title: "Bleach: Thousand-Year Blood War",
+                year: 2022,
+                episodes: 26,
+                status: "watching",
+                rating: 9.0,
+                genres: ["Action", "Supernatural", "Fantasy"],
+                description: "Ichigo faces the Quincy king in the final battle.",
+                image: "https://cdn.myanimelist.net/images/anime/1764/126627.jpg"
+            },
+            {
+                id: 19,
+                title: "Cyberpunk: Edgerunners",
+                year: 2022,
+                episodes: 10,
+                status: "completed",
+                rating: 8.7,
+                genres: ["Sci-Fi", "Action", "Drama"],
+                description: "A street kid becomes an edgerunner in Night City.",
+                image: "https://cdn.myanimelist.net/images/anime/1810/126435.jpg"
+            },
+            {
+                id: 20,
+                title: "Made in Abyss",
+                year: 2017,
+                episodes: 25,
+                status: "completed",
+                rating: 8.8,
+                genres: ["Adventure", "Fantasy", "Drama"],
+                description: "An orphan girl explores a mysterious abyss.",
+                image: "https://cdn.myanimelist.net/images/anime/6/86733.jpg"
+            },
+            {
+                id: 21,
+                title: "Kaguya-sama: Love is War",
+                year: 2019,
+                episodes: 37,
+                status: "completed",
+                rating: 8.6,
+                genres: ["Comedy", "Romance", "School"],
+                description: "Two genius students try to make the other confess love first.",
+                image: "https://cdn.myanimelist.net/images/anime/1295/106734.jpg"
+            },
+            {
+                id: 22,
+                title: "Your Lie in April",
+                year: 2014,
+                episodes: 22,
+                status: "completed",
+                rating: 8.7,
+                genres: ["Drama", "Music", "Romance"],
+                description: "A pianist meets a violinist who changes his life.",
+                image: "https://cdn.myanimelist.net/images/anime/3/67177.jpg"
+            },
+            {
+                id: 23,
+                title: "Violet Evergarden",
+                year: 2018,
+                episodes: 13,
+                status: "completed",
+                rating: 8.7,
+                genres: ["Drama", "Fantasy", "Slice of Life"],
+                description: "A former soldier becomes an Auto Memory Doll.",
+                image: "https://cdn.myanimelist.net/images/anime/1795/95088.jpg"
+            },
+            {
+                id: 24,
+                title: "Re:Zero - Starting Life in Another World",
+                year: 2016,
+                episodes: 50,
+                status: "watching",
+                rating: 8.3,
+                genres: ["Fantasy", "Drama", "Thriller"],
+                description: "A boy is transported to a fantasy world with return-by-death ability.",
+                image: "https://cdn.myanimelist.net/images/anime/11/79410.jpg"
+            },
+            {
+                id: 25,
+                title: "KonoSuba: God's Blessing on This Wonderful World!",
+                year: 2016,
+                episodes: 20,
+                status: "completed",
+                rating: 8.1,
+                genres: ["Comedy", "Fantasy", "Adventure"],
+                description: "A boy is reincarnated with a useless goddess.",
+                image: "https://cdn.myanimelist.net/images/anime/8/77831.jpg"
+            },
+            {
+                id: 26,
+                title: "Sword Art Online",
+                year: 2012,
+                episodes: 96,
+                status: "completed",
+                rating: 7.5,
+                genres: ["Action", "Adventure", "Romance"],
+                description: "Players trapped in a VR MMORPG must clear the game to escape.",
+                image: "https://cdn.myanimelist.net/images/anime/11/39717.jpg"
+            },
+            {
+                id: 27,
+                title: "Dragon Ball Super",
+                year: 2015,
+                episodes: 131,
+                status: "completed",
+                rating: 7.4,
+                genres: ["Action", "Adventure", "Comedy"],
+                description: "Goku and friends face new threats from different universes.",
+                image: "https://cdn.myanimelist.net/images/anime/7/74606.jpg"
+            },
+            {
+                id: 28,
+                title: "Neon Genesis Evangelion",
+                year: 1995,
+                episodes: 26,
+                status: "completed",
+                rating: 8.6,
+                genres: ["Action", "Drama", "Mecha"],
+                description: "Teenagers pilot giant mechs to protect Earth.",
+                image: "https://cdn.myanimelist.net/images/anime/1314/108941.jpg"
+            },
+            {
+                id: 29,
+                title: "Cowboy Bebop",
+                year: 1998,
+                episodes: 26,
+                status: "completed",
+                rating: 8.9,
+                genres: ["Action", "Adventure", "Sci-Fi"],
+                description: "Bounty hunters travel through space in the Bebop.",
+                image: "https://cdn.myanimelist.net/images/anime/4/19644.jpg"
+            },
+            {
+                id: 30,
+                title: "Trigun",
+                year: 1998,
+                episodes: 26,
+                status: "planning",
+                rating: 8.3,
+                genres: ["Action", "Adventure", "Sci-Fi"],
+                description: "A gunslinger with a huge bounty travels the desert.",
+                image: "https://cdn.myanimelist.net/images/anime/7/20310.jpg"
+            },
+            {
+                id: 31,
+                title: "Berserk",
+                year: 1997,
+                episodes: 25,
+                status: "planning",
+                rating: 8.8,
+                genres: ["Action", "Adventure", "Fantasy"],
+                description: "A lone mercenary travels seeking revenge.",
+                image: "https://cdn.myanimelist.net/images/anime/13/21171.jpg"
+            },
+            {
+                id: 32,
+                title: "Clannad: After Story",
+                year: 2008,
+                episodes: 24,
+                status: "completed",
+                rating: 8.8,
+                genres: ["Drama", "Romance", "Slice of Life"],
+                description: "Tomoya and Nagisa navigate life after high school.",
+                image: "https://cdn.myanimelist.net/images/anime/1299/110774.jpg"
+            },
+            {
+                id: 33,
+                title: "Anohana: The Flower We Saw That Day",
+                year: 2011,
+                episodes: 11,
+                status: "completed",
+                rating: 8.3,
+                genres: ["Drama", "Supernatural"],
+                description: "Childhood friends reunite when a ghost appears.",
+                image: "https://cdn.myanimelist.net/images/anime/5/79697.jpg"
+            },
+            {
+                id: 34,
+                title: "A Silent Voice",
+                year: 2016,
+                episodes: 1,
+                status: "completed",
+                rating: 8.3,
+                genres: ["Drama", "Romance", "School"],
+                description: "A former bully seeks redemption.",
+                image: "https://cdn.myanimelist.net/images/anime/1122/96435.jpg"
+            },
+            {
+                id: 35,
+                title: "Your Name",
+                year: 2016,
+                episodes: 1,
+                status: "completed",
+                rating: 8.4,
+                genres: ["Romance", "Supernatural", "Drama"],
+                description: "Two teenagers mysteriously swap bodies.",
+                image: "https://cdn.myanimelist.net/images/anime/5/87048.jpg"
+            },
+            {
+                id: 36,
+                title: "Weathering With You",
+                year: 2019,
+                episodes: 1,
+                status: "completed",
+                rating: 8.0,
+                genres: ["Romance", "Fantasy", "Drama"],
+                description: "A boy meets a girl who can control the weather.",
+                image: "https://cdn.myanimelist.net/images/anime/1598/101608.jpg"
+            },
+            {
+                id: 37,
+                title: "Haikyuu!!",
+                year: 2014,
+                episodes: 85,
+                status: "completed",
+                rating: 8.7,
+                genres: ["Sports", "Comedy", "Drama"],
+                description: "A short boy joins his school volleyball team.",
+                image: "https://cdn.myanimelist.net/images/anime/7/76014.jpg"
+            },
+            {
+                id: 38,
+                title: "Kuroko's Basketball",
+                year: 2012,
+                episodes: 75,
+                status: "completed",
+                rating: 8.2,
+                genres: ["Sports", "Comedy", "School"],
+                description: "A basketball team with former members of the Generation of Miracles.",
+                image: "https://cdn.myanimelist.net/images/anime/5/55473.jpg"
+            },
+            {
+                id: 39,
+                title: "Blue Lock",
+                year: 2022,
+                episodes: 24,
+                status: "watching",
+                rating: 8.3,
+                genres: ["Sports", "Drama"],
+                description: "300 strikers compete to become Japan's next soccer star.",
+                image: "https://cdn.myanimelist.net/images/anime/1946/127956.jpg"
+            },
+            {
+                id: 40,
+                title: "Dr. Stone",
+                year: 2019,
+                episodes: 47,
+                status: "completed",
+                rating: 8.2,
+                genres: ["Sci-Fi", "Adventure", "Comedy"],
+                description: "A genius tries to rebuild civilization after petrification.",
+                image: "https://cdn.myanimelist.net/images/anime/1613/102576.jpg"
+            },
+            {
+                id: 41,
+                title: "The Promised Neverland",
+                year: 2019,
+                episodes: 23,
+                status: "completed",
+                rating: 8.3,
+                genres: ["Mystery", "Horror", "Psychological"],
+                description: "Orphans discover the dark truth about their orphanage.",
+                image: "https://cdn.myanimelist.net/images/anime/1288/105456.jpg"
+            },
+            {
+                id: 42,
+                title: "Beastars",
+                year: 2019,
+                episodes: 24,
+                status: "completed",
+                rating: 7.9,
+                genres: ["Drama", "Mystery", "Psychological"],
+                description: "A wolf struggles with his instincts in an animal society.",
+                image: "https://cdn.myanimelist.net/images/anime/1717/102985.jpg"
+            },
+            {
+                id: 43,
+                title: "Dorohedoro",
+                year: 2020,
+                episodes: 12,
+                status: "completed",
+                rating: 8.1,
+                genres: ["Action", "Fantasy", "Comedy"],
+                description: "A man with a reptile head searches for the sorcerer who cursed him.",
+                image: "https://cdn.myanimelist.net/images/anime/1085/106373.jpg"
+            },
+            {
+                id: 44,
+                title: "Great Pretender",
+                year: 2020,
+                episodes: 23,
+                status: "completed",
+                rating: 8.1,
+                genres: ["Comedy", "Drama", "Crime"],
+                description: "A Japanese swindler gets involved with international con artists.",
+                image: "https://cdn.myanimelist.net/images/anime/1402/107551.jpg"
+            },
+            {
+                id: 45,
+                title: "Carole & Tuesday",
+                year: 2019,
+                episodes: 24,
+                status: "completed",
+                rating: 7.9,
+                genres: ["Drama", "Music", "Sci-Fi"],
+                description: "Two girls form a musical duo on Mars.",
+                image: "https://cdn.myanimelist.net/images/anime/1292/100770.jpg"
+            },
+            {
+                id: 46,
+                title: "Keep Your Hands Off Eizouken!",
+                year: 2020,
+                episodes: 12,
+                status: "completed",
+                rating: 8.1,
+                genres: ["Comedy", "Slice of Life", "School"],
+                description: "High school girls start an anime club to create animations.",
+                image: "https://cdn.myanimelist.net/images/anime/1704/106659.jpg"
+            },
+            {
+                id: 47,
+                title: "Deca-Dence",
+                year: 2020,
+                episodes: 12,
+                status: "completed",
+                rating: 7.6,
+                genres: ["Action", "Sci-Fi", "Adventure"],
+                description: "Humanity's last fortress battles giant creatures.",
+                image: "https://cdn.myanimelist.net/images/anime/1960/107399.jpg"
+            },
+            {
+                id: 48,
+                title: "To Your Eternity",
+                year: 2021,
+                episodes: 20,
+                status: "watching",
+                rating: 8.3,
+                genres: ["Drama", "Fantasy", "Supernatural"],
+                description: "An immortal being experiences life through various forms.",
+                image: "https://cdn.myanimelist.net/images/anime/1942/113669.jpg"
+            },
+            {
+                id: 49,
+                title: "Odd Taxi",
+                year: 2021,
+                episodes: 13,
+                status: "completed",
+                rating: 8.5,
+                genres: ["Mystery", "Drama", "Supernatural"],
+                description: "A walrus taxi driver gets involved in a missing girl case.",
+                image: "https://cdn.myanimelist.net/images/anime/1985/114576.jpg"
+            },
+            {
+                id: 50,
+                title: "Ranking of Kings",
+                year: 2021,
+                episodes: 23,
+                status: "completed",
+                rating: 8.6,
+                genres: ["Adventure", "Fantasy", "Drama"],
+                description: "A deaf prince strives to become a great king.",
+                image: "https://cdn.myanimelist.net/images/anime/1830/119089.jpg"
+            },
+            {
+                id: 51,
+                title: "Sonny Boy",
+                year: 2021,
+                episodes: 12,
+                status: "completed",
+                rating: 7.7,
+                genres: ["Sci-Fi", "Drama", "Supernatural"],
+                description: "Students drift through a void-like dimension.",
+                image: "https://cdn.myanimelist.net/images/anime/1414/116097.jpg"
+            },
+            {
+                id: 52,
+                title: "The Case Study of Vanitas",
+                year: 2021,
+                episodes: 24,
+                status: "watching",
+                rating: 8.0,
+                genres: ["Fantasy", "Supernatural", "Vampire"],
+                description: "A human doctor treats vampires in 19th century Paris.",
+                image: "https://cdn.myanimelist.net/images/anime/1498/116879.jpg"
+            },
+            {
+                id: 53,
+                title: "86 Eighty-Six",
+                year: 2021,
+                episodes: 23,
+                status: "completed",
+                rating: 8.4,
+                genres: ["Action", "Drama", "Mecha"],
+                description: "A commander and drone pilots fight autonomous machines.",
+                image: "https://cdn.myanimelist.net/images/anime/1989/117501.jpg"
+            },
+            {
+                id: 54,
+                title: "Mieruko-chan",
+                year: 2021,
+                episodes: 12,
+                status: "completed",
+                rating: 7.6,
+                genres: ["Comedy", "Horror", "Supernatural"],
+                description: "A girl who can see spirits tries to ignore them.",
+                image: "https://cdn.myanimelist.net/images/anime/1940/117501.jpg"
+            },
+            {
+                id: 55,
+                title: "Komi Can't Communicate",
+                year: 2021,
+                episodes: 24,
+                status: "watching",
+                rating: 8.0,
+                genres: ["Comedy", "Slice of Life", "School"],
+                description: "A girl with communication disorder tries to make 100 friends.",
+                image: "https://cdn.myanimelist.net/images/anime/1823/117501.jpg"
+            },
+            {
+                id: 56,
+                title: "My Dress-Up Darling",
+                year: 2022,
+                episodes: 12,
+                status: "completed",
+                rating: 8.2,
+                genres: ["Comedy", "Romance", "Slice of Life"],
+                description: "A hina doll artisan helps a cosplayer create costumes.",
+                image: "https://cdn.myanimelist.net/images/anime/1913/120117.jpg"
+            },
+            {
+                id: 57,
+                title: "Sabikui Bisco",
+                year: 2022,
+                episodes: 12,
+                status: "completed",
+                rating: 7.5,
+                genres: ["Action", "Adventure", "Fantasy"],
+                description: "A mushroom terrorist searches for a rust-eating mushroom.",
+                image: "https://cdn.myanimelist.net/images/anime/1893/120117.jpg"
+            },
+            {
+                id: 58,
+                title: "The Orbital Children",
+                year: 2022,
+                episodes: 6,
+                status: "completed",
+                rating: 7.4,
+                genres: ["Sci-Fi", "Adventure", "Space"],
+                description: "Children stranded on a space station must survive.",
+                image: "https://cdn.myanimelist.net/images/anime/1976/120117.jpg"
+            },
+            {
+                id: 59,
+                title: "Ya Boy Kongming!",
+                year: 2022,
+                episodes: 12,
+                status: "completed",
+                rating: 8.2,
+                genres: ["Comedy", "Music", "Historical"],
+                description: "Ancient strategist Kongming becomes a music producer in Tokyo.",
+                image: "https://cdn.myanimelist.net/images/anime/1438/122795.jpg"
+            },
+            {
+                id: 60,
+                title: "Summer Time Rendering",
+                year: 2022,
+                episodes: 25,
+                status: "completed",
+                rating: 8.6,
+                genres: ["Mystery", "Supernatural", "Thriller"],
+                description: "A boy gets caught in time loops after returning to his hometown.",
+                image: "https://cdn.myanimelist.net/images/anime/1834/122795.jpg"
+            },
+            {
+                id: 61,
+                title: "Call of the Night",
+                year: 2022,
+                episodes: 13,
+                status: "completed",
+                rating: 7.9,
+                genres: ["Romance", "Supernatural", "Vampire"],
+                description: "A boy becomes fascinated with the night world after meeting a vampire.",
+                image: "https://cdn.myanimelist.net/images/anime/1502/122795.jpg"
+            },
+            {
+                id: 62,
+                title: "Lycoris Recoil",
+                year: 2022,
+                episodes: 13,
+                status: "completed",
+                rating: 8.3,
+                genres: ["Action", "Comedy", "Crime"],
+                description: "Girls work at a cafe while secretly being crime-fighting agents.",
+                image: "https://cdn.myanimelist.net/images/anime/1122/122795.jpg"
+            },
+            {
+                id: 63,
+                title: "Bocchi the Rock!",
+                year: 2022,
+                episodes: 12,
+                status: "completed",
+                rating: 8.7,
+                genres: ["Comedy", "Music", "Slice of Life"],
+                description: "A shy guitarist joins a band and learns to overcome anxiety.",
+                image: "https://cdn.myanimelist.net/images/anime/1441/122795.jpg"
+            },
+            {
+                id: 64,
+                title: "Blue Period",
+                year: 2021,
+                episodes: 12,
+                status: "completed",
+                rating: 8.0,
+                genres: ["Drama", "Slice of Life", "School"],
+                description: "A student discovers his passion for painting and pursues art.",
+                image: "https://cdn.myanimelist.net/images/anime/1693/117773.jpg"
+            },
+            {
+                id: 65,
+                title: "Sasaki and Miyano",
+                year: 2022,
+                episodes: 12,
+                status: "completed",
+                rating: 7.9,
+                genres: ["Romance", "Slice of Life", "School"],
+                description: "A shy boy lends BL manga to his classmate, leading to romance.",
+                image: "https://cdn.myanimelist.net/images/anime/1658/122795.jpg"
+            },
+            {
+                id: 66,
+                title: "Love After World Domination",
+                year: 2022,
+                episodes: 12,
+                status: "completed",
+                rating: 7.6,
+                genres: ["Comedy", "Romance", "Superhero"],
+                description: "A superhero and a villain fall in love despite being enemies.",
+                image: "https://cdn.myanimelist.net/images/anime/1970/122795.jpg"
+            },
+            {
+                id: 67,
+                title: "Aharen-san wa Hakarenai",
+                year: 2022,
+                episodes: 12,
+                status: "completed",
+                rating: 7.5,
+                genres: ["Comedy", "Slice of Life", "School"],
+                description: "A boy tries to understand his extremely quiet classmate.",
+                image: "https://cdn.myanimelist.net/images/anime/1412/122795.jpg"
+            },
+            {
+                id: 68,
+                title: "Shikimori's Not Just a Cutie",
+                year: 2022,
+                episodes: 12,
+                status: "completed",
+                rating: 7.4,
+                genres: ["Comedy", "Romance", "School"],
+                description: "A cool girlfriend protects her unlucky boyfriend.",
+                image: "https://cdn.myanimelist.net/images/anime/1546/122795.jpg"
+            },
+            {
+                id: 69,
+                title: "Dance Dance Danseur",
+                year: 2022,
+                episodes: 11,
+                status: "completed",
+                rating: 7.7,
+                genres: ["Drama", "Sports", "Performing Arts"],
+                description: "A boy rediscovers his passion for ballet.",
+                image: "https://cdn.myanimelist.net/images/anime/1581/122795.jpg"
+            },
+            {
+                id: 70,
+                title: "Deaimon",
+                year: 2022,
+                episodes: 12,
+                status: "completed",
+                rating: 7.6,
+                genres: ["Slice of Life", "Drama", "Food"],
+                description: "A man returns to his family's sweets shop and bonds with a girl.",
+                image: "https://cdn.myanimelist.net/images/anime/1476/122795.jpg"
+            },
+            {
+                id: 71,
+                title: "The Executioner and Her Way of Life",
+                year: 2022,
+                episodes: 12,
+                status: "completed",
+                rating: 7.3,
+                genres: ["Fantasy", "Drama", "Action"],
+                description: "An executioner hunts dangerous travelers from Japan.",
+                image: "https://cdn.myanimelist.net/images/anime/1741/122795.jpg"
+            },
+            {
+                id: 72,
+                title: "Love Live! Superstar!!",
+                year: 2021,
+                episodes: 12,
+                status: "completed",
+                rating: 7.5,
+                genres: ["Music", "Slice of Life", "School"],
+                description: "Girls form a school idol group to save their school.",
+                image: "https://cdn.myanimelist.net/images/anime/1236/117773.jpg"
+            },
+            {
+                id: 73,
+                title: "Princess Principal",
+                year: 2017,
+                episodes: 12,
+                status: "completed",
+                rating: 7.8,
+                genres: ["Action", "Mystery", "Historical"],
+                description: "Spy girls carry out missions in steampunk London.",
+                image: "https://cdn.myanimelist.net/images/anime/3/86733.jpg"
+            },
+            {
+                id: 74,
+                title: "Land of the Lustrous",
+                year: 2017,
+                episodes: 12,
+                status: "completed",
+                rating: 8.3,
+                genres: ["Fantasy", "Drama", "Sci-Fi"],
+                description: "Gemstone people defend themselves from moon beings.",
+                image: "https://cdn.myanimelist.net/images/anime/10/90182.jpg"
+            },
+            {
+                id: 75,
+                title: "Girls' Last Tour",
+                year: 2017,
+                episodes: 12,
+                status: "completed",
+                rating: 8.0,
+                genres: ["Slice of Life", "Drama", "Sci-Fi"],
+                description: "Two girls travel through a post-apocalyptic city.",
+                image: "https://cdn.myanimelist.net/images/anime/3/88487.jpg"
+            },
+            {
+                id: 76,
+                title: "Josee, the Tiger and the Fish",
+                year: 2020,
+                episodes: 1,
+                status: "completed",
+                rating: 8.2,
+                genres: ["Drama", "Romance", "Slice of Life"],
+                description: "A student assists a wheelchair-bound girl with ocean dreams.",
+                image: "https://cdn.myanimelist.net/images/anime/1139/108941.jpg"
+            },
+            {
+                id: 77,
+                title: "Belle",
+                year: 2021,
+                episodes: 1,
+                status: "completed",
+                rating: 7.8,
+                genres: ["Fantasy", "Music", "Drama"],
+                description: "A shy student becomes a famous singer in a virtual world.",
+                image: "https://cdn.myanimelist.net/images/anime/1214/117773.jpg"
+            },
+            {
+                id: 78,
+                title: "Goodbye, Don Glees!",
+                year: 2022,
+                episodes: 1,
+                status: "planning",
+                rating: 7.5,
+                genres: ["Adventure", "Drama", "Slice of Life"],
+                description: "Three boys embark on a journey to prove their innocence.",
+                image: "https://cdn.myanimelist.net/images/anime/1960/122795.jpg"
+            },
+            {
+                id: 79,
+                title: "The First Slam Dunk",
+                year: 2022,
+                episodes: 1,
+                status: "planning",
+                rating: 8.6,
+                genres: ["Sports", "Drama", "School"],
+                description: "The story of Ryota Miyagi and the Shohoku basketball team.",
+                image: "https://cdn.myanimelist.net/images/anime/1498/122795.jpg"
+            },
+            {
+                id: 80,
+                title: "Suzume",
+                year: 2022,
+                episodes: 1,
+                status: "planning",
+                rating: 8.1,
+                genres: ["Adventure", "Fantasy", "Drama"],
+                description: "A girl must close doors causing disasters across Japan.",
+                image: "https://cdn.myanimelist.net/images/anime/1598/122795.jpg"
+            },
+            {
+                id: 81,
+                title: "Blue Giant",
+                year: 2023,
+                episodes: 1,
+                status: "planning",
+                rating: 8.4,
+                genres: ["Drama", "Music", "Slice of Life"],
+                description: "A student dedicates himself to becoming a jazz saxophonist.",
+                image: "https://cdn.myanimelist.net/images/anime/1412/127956.jpg"
+            },
+            {
+                id: 82,
+                title: "Sand Land",
+                year: 2023,
+                episodes: 13,
+                status: "planning",
+                rating: 8.2,
+                genres: ["Action", "Adventure", "Fantasy"],
+                description: "A demon prince helps humans find a legendary water source.",
+                image: "https://cdn.myanimelist.net/images/anime/1834/127956.jpg"
+            },
+            {
+                id: 83,
+                title: "Undead Unluck",
+                year: 2023,
+                episodes: 24,
+                status: "watching",
+                rating: 8.1,
+                genres: ["Action", "Comedy", "Supernatural"],
+                description: "A girl with unluck powers meets an undead man.",
+                image: "https://cdn.myanimelist.net/images/anime/1223/133839.jpg"
+            },
+            {
+                id: 84,
+                title: "Frieren: Beyond Journey's End",
+                year: 2023,
+                episodes: 28,
+                status: "watching",
+                rating: 9.1,
+                genres: ["Fantasy", "Drama", "Adventure"],
+                description: "An elf mage reflects on her past journey.",
+                image: "https://cdn.myanimelist.net/images/anime/1015/138006.jpg"
+            },
+            {
+                id: 85,
+                title: "The Apothecary Diaries",
+                year: 2023,
+                episodes: 24,
+                status: "watching",
+                rating: 8.6,
+                genres: ["Mystery", "Drama", "Historical"],
+                description: "A palace maid solves mysteries using medical knowledge.",
+                image: "https://cdn.myanimelist.net/images/anime/1798/138415.jpg"
+            },
+            {
+                id: 86,
+                title: "Solo Leveling",
+                year: 2024,
+                episodes: 12,
+                status: "watching",
+                rating: 8.8,
+                genres: ["Action", "Fantasy", "Adventure"],
+                description: "The weakest hunter becomes the strongest.",
+                image: "https://cdn.myanimelist.net/images/anime/1076/138007.jpg"
+            },
+            {
+                id: 87,
+                title: "Delicious in Dungeon",
+                year: 2024,
+                episodes: 24,
+                status: "watching",
+                rating: 8.4,
+                genres: ["Comedy", "Fantasy", "Adventure"],
+                description: "Adventurers cook and eat monsters in a dungeon.",
+                image: "https://cdn.myanimelist.net/images/anime/1015/140439.jpg"
+            },
+            {
+                id: 88,
+                title: "Mushoku Tensei: Jobless Reincarnation",
+                year: 2021,
+                episodes: 36,
+                status: "watching",
+                rating: 8.4,
+                genres: ["Fantasy", "Drama", "Adventure"],
+                description: "A man is reincarnated in a fantasy world.",
+                image: "https://cdn.myanimelist.net/images/anime/1530/117776.jpg"
+            },
+            {
+                id: 89,
+                title: "That Time I Got Reincarnated as a Slime",
+                year: 2018,
+                episodes: 48,
+                status: "completed",
+                rating: 8.1,
+                genres: ["Action", "Comedy", "Fantasy"],
+                description: "A man is reincarnated as a slime in a fantasy world.",
+                image: "https://cdn.myanimelist.net/images/anime/1694/111940.jpg"
+            },
+            {
+                id: 90,
+                title: "Overlord",
+                year: 2015,
+                episodes: 52,
+                status: "completed",
+                rating: 7.8,
+                genres: ["Action", "Fantasy", "Isekai"],
+                description: "A gamer gets trapped in a game as his powerful character.",
+                image: "https://cdn.myanimelist.net/images/anime/7/88019.jpg"
+            },
+            {
+                id: 91,
+                title: "The Rising of the Shield Hero",
+                year: 2019,
+                episodes: 38,
+                status: "completed",
+                rating: 7.9,
+                genres: ["Action", "Adventure", "Drama"],
+                description: "A man is summoned as the Shield Hero in a fantasy world.",
+                image: "https://cdn.myanimelist.net/images/anime/1490/101365.jpg"
+            },
+            {
+                id: 92,
+                title: "No Game No Life",
+                year: 2014,
+                episodes: 12,
+                status: "completed",
+                rating: 8.1,
+                genres: ["Comedy", "Fantasy", "Ecchi"],
+                description: "Siblings are transported to a world where everything is decided by games.",
+                image: "https://cdn.myanimelist.net/images/anime/1074/111944.jpg"
+            },
+            {
+                id: 93,
+                title: "Sword Art Online Alternative: Gun Gale Online",
+                year: 2018,
+                episodes: 12,
+                status: "completed",
+                rating: 7.6,
+                genres: ["Action", "Game", "Military"],
+                description: "A tall girl plays a VR game where she can be her ideal self.",
+                image: "https://cdn.myanimelist.net/images/anime/1863/93518.jpg"
+            },
+            {
+                id: 94,
+                title: "Log Horizon",
+                year: 2013,
+                episodes: 62,
+                status: "completed",
+                rating: 8.0,
+                genres: ["Action", "Game", "Fantasy"],
+                description: "Players trapped in a game work to build a new society.",
+                image: "https://cdn.myanimelist.net/images/anime/5/84004.jpg"
+            },
+            {
+                id: 95,
+                title: ".hack//Sign",
+                year: 2002,
+                episodes: 26,
+                status: "planning",
+                rating: 7.2,
+                genres: ["Adventure", "Fantasy", "Mystery"],
+                description: "A player gets trapped in a game and can't log out.",
+                image: "https://cdn.myanimelist.net/images/anime/8/20170.jpg"
+            },
+            {
+                id: 96,
+                title: "Accel World",
+                year: 2012,
+                episodes: 24,
+                status: "completed",
+                rating: 7.2,
+                genres: ["Action", "Game", "Romance"],
+                description: "A bullied boy gains access to an accelerated VR fighting game.",
+                image: "https://cdn.myanimelist.net/images/anime/8/38155.jpg"
+            },
+            {
+                id: 97,
+                title: "The Devil is a Part-Timer!",
+                year: 2013,
+                episodes: 13,
+                status: "completed",
+                rating: 7.8,
+                genres: ["Comedy", "Fantasy", "Romance"],
+                description: "The Devil King works at a fast-food restaurant in modern Tokyo.",
+                image: "https://cdn.myanimelist.net/images/anime/12/44804.jpg"
+            },
+            {
+                id: 98,
+                title: "Noragami",
+                year: 2014,
+                episodes: 25,
+                status: "completed",
+                rating: 8.0,
+                genres: ["Action", "Adventure", "Supernatural"],
+                description: "A minor god seeks to become famous by doing odd jobs.",
+                image: "https://cdn.myanimelist.net/images/anime/8/56179.jpg"
+            },
+            {
+                id: 99,
+                title: "Blue Exorcist",
+                year: 2011,
+                episodes: 37,
+                status: "completed",
+                rating: 7.6,
+                genres: ["Action", "Fantasy", "Supernatural"],
+                description: "The son of Satan becomes an exorcist to fight demons.",
+                image: "https://cdn.myanimelist.net/images/anime/10/75195.jpg"
+            },
+            {
+                id: 100,
+                title: "Black Clover",
+                year: 2017,
+                episodes: 170,
+                status: "watching",
+                rating: 7.8,
+                genres: ["Action", "Fantasy", "Magic"],
+                description: "A magicless boy strives to become the Wizard King.",
+                image: "https://cdn.myanimelist.net/images/anime/2/88336.jpg"
+            }
+        ];
+
+        // DOM Elements
+        const animeGrid = document.getElementById('animeGrid');
+        const pagination = document.getElementById('pagination');
+        const genreFilter = document.getElementById('genreFilter');
+        const yearFilter = document.getElementById('yearFilter');
+        const statusFilter = document.getElementById('statusFilter');
+        const applyFiltersBtn = document.getElementById('applyFilters');
+        const resetFiltersBtn = document.getElementById('resetFilters');
+
+        // Pagination variables
+        let currentPage = 1;
+        const itemsPerPage = 12;
+        let filteredAnime = [...animeDatabase];
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Remove loading spinner
+            animeGrid.innerHTML = '';
+            
+            renderAnimeGrid();
+            renderPagination();
+            updateStats();
+            
+            // Add event listeners
+            applyFiltersBtn.addEventListener('click', applyFilters);
+            resetFiltersBtn.addEventListener('click', resetFilters);
+            
+            // Add change events to filters for auto-apply
+            genreFilter.addEventListener('change', applyFilters);
+            yearFilter.addEventListener('change', applyFilters);
+            statusFilter.addEventListener('change', applyFilters);
+        });
+
+        // Apply filters function
+        function applyFilters() {
+            const selectedGenre = genreFilter.value;
+            const selectedYear = yearFilter.value;
+            const selectedStatus = statusFilter.value;
+            
+            filteredAnime = animeDatabase.filter(anime => {
+                // Check genre filter
+                if (selectedGenre !== 'all' && !anime.genres.includes(selectedGenre)) {
+                    return false;
+                }
+                
+                // Check year filter
+                if (selectedYear !== 'all' && anime.year !== parseInt(selectedYear)) {
+                    return false;
+                }
+                
+                // Check status filter
+                if (selectedStatus !== 'all' && anime.status !== selectedStatus) {
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            // Reset to first page and render
+            currentPage = 1;
+            renderAnimeGrid();
+            renderPagination();
+            updateStats();
+        }
+
+        // Reset filters function
+        function resetFilters() {
+            genreFilter.value = 'all';
+            yearFilter.value = 'all';
+            statusFilter.value = 'all';
+            filteredAnime = [...animeDatabase];
+            currentPage = 1;
+            renderAnimeGrid();
+            renderPagination();
+            updateStats();
+        }
+
+        // Render anime grid
+        function renderAnimeGrid() {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const currentAnime = filteredAnime.slice(startIndex, endIndex);
+            
+            animeGrid.innerHTML = '';
+            
+            if (currentAnime.length === 0) {
+                animeGrid.innerHTML = '<div class="error-message">No anime found matching your filters.</div>';
+                return;
+            }
+            
+            currentAnime.forEach(anime => {
+                const animeCard = document.createElement('div');
+                animeCard.className = 'anime-card';
+                
+                // Status class
+                let statusClass = '';
+                let statusText = '';
+                switch(anime.status) {
+                    case 'watching':
+                        statusClass = 'status-watching';
+                        statusText = 'Watching';
+                        break;
+                    case 'completed':
+                        statusClass = 'status-completed';
+                        statusText = 'Completed';
+                        break;
+                    case 'planning':
+                        statusClass = 'status-planning';
+                        statusText = 'Plan to Watch';
+                        break;
+                }
+                
+                // Generate star rating
+                const fullStars = Math.floor(anime.rating);
+                const halfStar = anime.rating % 1 >= 0.5;
+                let starsHTML = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= fullStars) {
+                        starsHTML += '★';
+                    } else if (i === fullStars + 1 && halfStar) {
+                        starsHTML += '½';
+                    } else {
+                        starsHTML += '☆';
+                    }
+                }
+                
+                // Create image element with fallback
+                const imageHTML = `
+                    <div class="image-container">
+                        <img src="${anime.image}" 
+                             alt="${anime.title}" 
+                             class="anime-image"
+                             loading="lazy"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/1a1a1a/ff6b6b?text=${encodeURIComponent(anime.title)}'; this.style.objectFit='cover'">
+                    </div>
+                `;
+                
+                animeCard.innerHTML = `
+                    ${imageHTML}
+                    <div class="anime-info">
+                        <h3 class="anime-title">${anime.title}</h3>
+                        <div class="anime-meta">
+                            <span>${anime.year}</span>
+                            <span>${anime.episodes} eps</span>
+                            <span class="anime-status ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="anime-tags">
+                            ${anime.genres.map(genre => `<span class="tag">${genre}</span>`).join('')}
+                        </div>
+                        <p class="anime-description">${anime.description}</p>
+                        <div class="rating">${starsHTML} ${anime.rating}</div>
+                    </div>
+                `;
+                
+                animeGrid.appendChild(animeCard);
+            });
+        }
+
+        // Update statistics
+        function updateStats() {
+            const watchingCount = filteredAnime.filter(a => a.status === 'watching').length;
+            const completedCount = filteredAnime.filter(a => a.status === 'completed').length;
+            const planningCount = filteredAnime.filter(a => a.status === 'planning').length;
+            const totalEpisodes = filteredAnime.reduce((sum, anime) => sum + anime.episodes, 0);
+            
+            document.getElementById('watchingCount').textContent = watchingCount;
+            document.getElementById('completedCount').textContent = completedCount;
+            document.getElementById('planningCount').textContent = planningCount;
+            document.getElementById('totalEpisodes').textContent = totalEpisodes;
+        }
+
+        // Render pagination
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredAnime.length / itemsPerPage);
+            
+            pagination.innerHTML = '';
+            
+            if (totalPages <= 1) return;
+            
+            // Previous button
+            const prevButton = document.createElement('button');
+            prevButton.className = 'page-btn';
+            prevButton.textContent = '←';
+            prevButton.disabled = currentPage === 1;
+            prevButton.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderAnimeGrid();
+                    renderPagination();
+                }
+            });
+            pagination.appendChild(prevButton);
+            
+            // Page buttons
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            // Adjust start page if we're near the end
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                pageButton.textContent = i;
+                pageButton.addEventListener('click', () => {
+                    currentPage = i;
+                    renderAnimeGrid();
+                    renderPagination();
+                });
+                pagination.appendChild(pageButton);
+            }
+            
+            // Next button
+            const nextButton = document.createElement('button');
+            nextButton.className = 'page-btn';
+            nextButton.textContent = '→';
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderAnimeGrid();
+                    renderPagination();
+                }
+            });
+            pagination.appendChild(nextButton);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>UNO Game</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>UNO Game</h1>
+
+<div id="gameContainer">
+    <div id="discardPile">Discard: <span id="discardCard">-</span></div>
+    <div id="drawPile"><button id="drawBtn">Draw Card</button></div>
+    <p id="message"></p>
+    <h2>Your Hand:</h2>
+    <div id="playerHand"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #111; /* Dark background */
+    color: #fff;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    margin-top: 20px;
+    color: #ff4757;
+}
+
+#gameContainer {
+    margin: 20px auto;
+    width: 90%;
+}
+
+#discardPile, #drawPile {
+    margin: 15px;
+    font-size: 18px;
+}
+
+#playerHand {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.card {
+    width: 80px;
+    height: 120px;
+    margin: 5px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    border: 2px solid #fff;
+    user-select: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px #fff;
+}
+
+.red { background-color: #e74c3c; }
+.blue { background-color: #3498db; }
+.green { background-color: #2ecc71; }
+.yellow { background-color: #f1c40f; color: #000; }
+.black { background-color: #333; color: #fff; }
+
+#drawBtn {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #ff4757;
+    color: white;
+}
+
+#drawBtn:hover {
+    background-color: #ff6b81;
+}
+
+#message {
+    font-size: 18px;
+    margin-top: 10px;
+}
+// UNO Game Logic
+
+const colors = ["red","blue","green","yellow"];
+const numbers = Array.from({length:10},(_,i)=>i);
+const specials = ["Skip","Reverse","+2"];
+const wilds = ["Wild","Wild+4"];
+
+let deck = [], discardPile = [];
+let playerHand = [], aiHands = [[],[],[]];
+let turn = 0; // 0 = player, 1-3 = AI
+let direction = 1; // 1 = clockwise
+
+const message = document.getElementById("message");
+const discardCardSpan = document.getElementById("discardCard");
+const playerHandDiv = document.getElementById("playerHand");
+const drawBtn = document.getElementById("drawBtn");
+
+// Initialize deck
+function initDeck(){
+    deck = [];
+    colors.forEach(color=>{
+        numbers.forEach(n=>deck.push({color,type:"number",value:n}));
+        specials.forEach(s=>deck.push({color,type:"special",value:s}));
+    });
+    wilds.forEach(w=>deck.push({color:"black",type:"wild",value:w}));
+    shuffle(deck);
+}
+
+// Shuffle function
+function shuffle(array){
+    for(let i=array.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [array[i],array[j]]=[array[j],array[i]];
+    }
+}
+
+// Deal hands
+function dealHands(){
+    playerHand = [];
+    aiHands = [[],[],[]];
+    for(let i=0;i<7;i++){
+        playerHand.push(deck.pop());
+        aiHands.forEach(hand=>hand.push(deck.pop()));
+    }
+    discardPile.push(deck.pop());
+    updateDisplay();
+}
+
+// Update UI
+function updateDisplay(){
+    const top = discardPile[discardPile.length-1];
+    discardCardSpan.textContent = top ? `${top.color} ${top.value}` : "-";
+
+    playerHandDiv.innerHTML = "";
+    playerHand.forEach((card,index)=>{
+        const cardDiv = document.createElement("div");
+        cardDiv.className = "card " + card.color;
+        cardDiv.textContent = card.value;
+        cardDiv.onclick = ()=>playerPlay(index);
+        playerHandDiv.appendChild(cardDiv);
+    });
+}
+
+// Check playable card
+function playable(card){
+    const top = discardPile[discardPile.length-1];
+    return card.color === top.color || card.value === top.value || card.color === "black";
+}
+
+// Player plays card
+function playerPlay(index){
+    const card = playerHand[index];
+    if(!playable(card)){
+        message.textContent = "Invalid move! Match color or number.";
+        return;
+    }
+    playCard(card,playerHand,index);
+}
+
+// Play card logic
+function playCard(card,hand,index){
+    discardPile.push(card);
+    hand.splice(index,1);
+    message.textContent = `Played ${card.color} ${card.value}`;
+
+    applySpecial(card);
+    updateDisplay();
+    checkWin();
+    nextTurn();
+}
+
+// Apply special card effects
+function applySpecial(card){
+    if(card.type==="special"){
+        if(card.value==="Skip") turn = nextPlayer(); // skip next
+        if(card.value==="Reverse") direction *= -1;
+        if(card.value==="+2") drawCards(nextPlayer(),2);
+    }
+    if(card.type==="wild"){
+        if(card.value==="Wild+4") drawCards(nextPlayer(),4);
+        // prompt player to choose color
+        if(turn===0){
+            let color = prompt("Choose color: red, blue, green, yellow").toLowerCase();
+            if(colors.includes(color)) discardPile[discardPile.length-1].color = color;
+        } else {
+            // AI chooses random color
+            discardPile[discardPile.length-1].color = colors[Math.floor(Math.random()*4)];
+        }
+    }
+}
+
+// Get next player
+function nextPlayer(){
+    return (turn + direction + 4) % 4;
+}
+
+// Advance turn
+function nextTurn(){
+    turn = nextPlayer();
+    if(turn!==0) setTimeout(aiPlay, 500);
+}
+
+// AI logic
+function aiPlay(){
+    const hand = aiHands[turn-1];
+    const card = hand.find(playable);
+    if(card){
+        const idx = hand.indexOf(card);
+        playCard(card,hand,idx);
+    } else {
+        drawCards(turn,1);
+        message.textContent = `AI ${turn} drew a card`;
+        setTimeout(nextTurn, 500);
+    }
+}
+
+// Draw cards
+function drawCards(playerIdx,count){
+    for(let i=0;i<count;i++){
+        if(deck.length===0) reshuffle();
+        const card = deck.pop();
+        if(playerIdx===0) playerHand.push(card);
+        else aiHands[playerIdx-1].push(card);
+    }
+    updateDisplay();
+}
+
+// Reshuffle discard pile
+function reshuffle(){
+    const top = discardPile.pop();
+    deck = discardPile;
+    discardPile = [top];
+    shuffle(deck);
+}
+
+// Check win
+function checkWin(){
+    if(playerHand.length===0){ alert("You Win!"); initGame(); }
+    aiHands.forEach((hand,i)=>{
+        if(hand.length===0){ alert(`AI ${i+1} Wins!`); initGame(); }
+    });
+}
+
+// Draw button
+drawBtn.onclick = ()=>{
+    drawCards(0,1);
+    message.textContent = "You drew a card";
+    nextTurn();
+};
+
+// Initialize game
+function initGame(){
+    initDeck();
+    dealHands();
+    turn = 0;
+    direction = 1;
+    message.textContent = "Your Turn!";
+}
+
+// Start game
+initGame();

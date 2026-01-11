@@ -1,0 +1,853 @@
+<script>
+    // Complete Anime Database with 100 entries (continuing from previous)
+    // I'll add the filter functionality
+    const animeDatabase = [
+        // First 25 anime from previous code
+        {
+            id: 1,
+            title: "Attack on Titan: The Final Season",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2020,
+            episodes: 28,
+            status: "completed",
+            rating: 9.1,
+            genres: ["Action", "Fantasy", "Drama"],
+            description: "Eren Yeager continues his fight against the Titans while uncovering dark secrets about their origins.",
+            tags: ["Dark Fantasy", "Military", "Epic"]
+        },
+        {
+            id: 2,
+            title: "Demon Slayer: Entertainment District Arc",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2021,
+            episodes: 11,
+            status: "completed",
+            rating: 9.0,
+            genres: ["Action", "Supernatural", "Historical"],
+            description: "Tanjiro and the Hashira investigate mysterious disappearances in the entertainment district.",
+            tags: ["Demons", "Swordsmanship", "Visuals"]
+        },
+        {
+            id: 3,
+            title: "Jujutsu Kaisen Season 2",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2023,
+            episodes: 23,
+            status: "watching",
+            rating: 9.2,
+            genres: ["Action", "Supernatural", "Horror"],
+            description: "The hidden inventory and Shibuya incident arcs reveal Gojo's past and present threats.",
+            tags: ["Curses", "Magic", "Dark"]
+        },
+        {
+            id: 4,
+            title: "Chainsaw Man",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2022,
+            episodes: 12,
+            status: "completed",
+            rating: 8.5,
+            genres: ["Action", "Horror", "Supernatural"],
+            description: "Denji becomes Chainsaw Man to pay off his debts and joins the Public Safety Devil Hunters.",
+            tags: ["Gore", "Devils", "Action"]
+        },
+        {
+            id: 5,
+            title: "Spy x Family Part 2",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2022,
+            episodes: 13,
+            status: "watching",
+            rating: 8.7,
+            genres: ["Action", "Comedy", "Slice of Life"],
+            description: "Loid Forger's mission continues as he balances being a spy, husband, and father.",
+            tags: ["Family", "Comedy", "Espionage"]
+        },
+        {
+            id: 6,
+            title: "Bleach: Thousand-Year Blood War",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2022,
+            episodes: 26,
+            status: "watching",
+            rating: 9.0,
+            genres: ["Action", "Supernatural", "Fantasy"],
+            description: "Ichigo and the Soul Society face their greatest threat yet - the Quincy king Yhwach.",
+            tags: ["Soul Reaper", "Quincy", "Epic"]
+        },
+        {
+            id: 7,
+            title: "Vinland Saga Season 2",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2023,
+            episodes: 24,
+            status: "completed",
+            rating: 8.8,
+            genres: ["Action", "Historical", "Drama"],
+            description: "Thorfinn seeks redemption as a slave on a farm, questioning his path of vengeance.",
+            tags: ["Vikings", "Historical", "Redemption"]
+        },
+        {
+            id: 8,
+            title: "Oshi no Ko",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2023,
+            episodes: 11,
+            status: "completed",
+            rating: 8.8,
+            genres: ["Drama", "Mystery", "Supernatural"],
+            description: "A doctor and his patient are reborn as twins in the entertainment industry.",
+            tags: ["Idol", "Reincarnation", "Dark"]
+        },
+        {
+            id: 9,
+            title: "Heavenly Delusion",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2023,
+            episodes: 13,
+            status: "completed",
+            rating: 8.3,
+            genres: ["Sci-Fi", "Mystery", "Adventure"],
+            description: "Two teenagers travel through post-apocalyptic Japan searching for heaven.",
+            tags: ["Post-apocalyptic", "Mystery", "Sci-Fi"]
+        },
+        {
+            id: 10,
+            title: "Hell's Paradise",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2023,
+            episodes: 13,
+            status: "completed",
+            rating: 8.1,
+            genres: ["Action", "Fantasy", "Adventure"],
+            description: "Criminals are sent to a mysterious island to find the elixir of immortality.",
+            tags: ["Samurai", "Fantasy", "Survival"]
+        },
+        {
+            id: 11,
+            title: "Zom 100: Bucket List of the Dead",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2023,
+            episodes: 12,
+            status: "watching",
+            rating: 8.0,
+            genres: ["Comedy", "Horror", "Adventure"],
+            description: "An overworked office worker finds freedom in the zombie apocalypse.",
+            tags: ["Zombies", "Comedy", "Adventure"]
+        },
+        {
+            id: 12,
+            title: "My Hero Academia Season 6",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2022,
+            episodes: 25,
+            status: "completed",
+            rating: 8.4,
+            genres: ["Action", "Superhero", "School"],
+            description: "The Paranormal Liberation War arc brings heroes and villains into all-out war.",
+            tags: ["Superpowers", "War", "School"]
+        },
+        {
+            id: 13,
+            title: "Mushoku Tensei: Jobless Reincarnation S2",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2023,
+            episodes: 12,
+            status: "watching",
+            rating: 8.6,
+            genres: ["Fantasy", "Drama", "Adventure"],
+            description: "Rudeus continues his journey as a magician while dealing with personal growth.",
+            tags: ["Isekai", "Magic", "Adventure"]
+        },
+        {
+            id: 14,
+            title: "The Eminence in Shadow",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2022,
+            episodes: 20,
+            status: "completed",
+            rating: 8.2,
+            genres: ["Comedy", "Fantasy", "Action"],
+            description: "A boy obsessed with being a shadow ruler creates a secret organization.",
+            tags: ["Isekai", "Comedy", "Action"]
+        },
+        {
+            id: 15,
+            title: "Bocchi the Rock!",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2022,
+            episodes: 12,
+            status: "completed",
+            rating: 8.7,
+            genres: ["Comedy", "Music", "Slice of Life"],
+            description: "An extremely shy guitarist joins a band and learns to overcome social anxiety.",
+            tags: ["Music", "Comedy", "Slice of Life"]
+        },
+        {
+            id: 16,
+            title: "Cyberpunk: Edgerunners",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2022,
+            episodes: 10,
+            status: "completed",
+            rating: 8.7,
+            genres: ["Sci-Fi", "Action", "Drama"],
+            description: "A street kid tries to survive in Night City by becoming an edgerunner.",
+            tags: ["Cyberpunk", "Action", "Tragedy"]
+        },
+        {
+            id: 17,
+            title: "Lycoris Recoil",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2022,
+            episodes: 13,
+            status: "completed",
+            rating: 8.3,
+            genres: ["Action", "Comedy", "Drama"],
+            description: "Two girls work at a cafe while secretly being agents fighting crime in Tokyo.",
+            tags: ["Secret Agents", "Comedy", "Action"]
+        },
+        {
+            id: 18,
+            title: "Call of the Night",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2022,
+            episodes: 13,
+            status: "completed",
+            rating: 7.9,
+            genres: ["Romance", "Supernatural", "Drama"],
+            description: "A boy meets a vampire and becomes fascinated with the night world.",
+            tags: ["Vampires", "Romance", "Night"]
+        },
+        {
+            id: 19,
+            title: "Made in Abyss: The Golden City",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2022,
+            episodes: 12,
+            status: "completed",
+            rating: 8.8,
+            genres: ["Adventure", "Fantasy", "Drama"],
+            description: "Riko and Reg descend further into the Abyss to find Riko's mother.",
+            tags: ["Adventure", "Dark Fantasy", "Exploration"]
+        },
+        {
+            id: 20,
+            title: "Chainsaw Man Part 1",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2022,
+            episodes: 12,
+            status: "completed",
+            rating: 8.5,
+            genres: ["Action", "Horror", "Supernatural"],
+            description: "Denji's life as a devil hunter working for the Public Safety Division.",
+            tags: ["Devils", "Action", "Dark Comedy"]
+        },
+        {
+            id: 21,
+            title: "Spy x Family Cour 1",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2022,
+            episodes: 12,
+            status: "completed",
+            rating: 8.6,
+            genres: ["Action", "Comedy", "Slice of Life"],
+            description: "A spy creates a fake family for his mission, unaware they have secrets too.",
+            tags: ["Family", "Comedy", "Spy"]
+        },
+        {
+            id: 22,
+            title: "Kaguya-sama: Love is War - Ultra Romantic",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2022,
+            episodes: 13,
+            status: "completed",
+            rating: 9.0,
+            genres: ["Comedy", "Romance", "School"],
+            description: "The mind games continue as Kaguya and Miyuki's relationship develops.",
+            tags: ["Romantic Comedy", "School", "Mind Games"]
+        },
+        {
+            id: 23,
+            title: "Attack on Titan: Final Season Part 2",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2022,
+            episodes: 12,
+            status: "completed",
+            rating: 9.1,
+            genres: ["Action", "Fantasy", "Drama"],
+            description: "The battle for Paradis reaches its climax as secrets are revealed.",
+            tags: ["Titans", "War", "Epic"]
+        },
+        {
+            id: 24,
+            title: "Demon Slayer: Mugen Train Arc",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2021,
+            episodes: 7,
+            status: "completed",
+            rating: 8.9,
+            genres: ["Action", "Supernatural", "Historical"],
+            description: "Tanjiro and friends board the Mugen Train to investigate disappearances.",
+            tags: ["Demons", "Train", "Action"]
+        },
+        {
+            id: 25,
+            title: "Jujutsu Kaisen 0 Movie",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2021,
+            episodes: 1,
+            status: "completed",
+            rating: 8.5,
+            genres: ["Action", "Supernatural", "Drama"],
+            description: "Yuta Okkotsu's journey as he learns to control the powerful curse haunting him.",
+            tags: ["Movie", "Curses", "Prequel"]
+        },
+        // Adding more to reach 100 (simplified entries)
+        {
+            id: 26,
+            title: "Naruto Shippuden",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2007,
+            episodes: 500,
+            status: "completed",
+            rating: 8.3,
+            genres: ["Action", "Adventure", "Martial Arts"],
+            description: "Naruto's journey to become Hokage and protect the village from various threats.",
+            tags: ["Ninja", "Shonen", "Coming-of-age"]
+        },
+        {
+            id: 27,
+            title: "One Piece",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 1999,
+            episodes: 1100,
+            status: "watching",
+            rating: 8.7,
+            genres: ["Action", "Adventure", "Fantasy"],
+            description: "Luffy and his crew search for the ultimate treasure in the Grand Line.",
+            tags: ["Pirates", "Adventure", "Long-running"]
+        },
+        {
+            id: 28,
+            title: "Fullmetal Alchemist: Brotherhood",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2009,
+            episodes: 64,
+            status: "completed",
+            rating: 9.1,
+            genres: ["Action", "Adventure", "Drama"],
+            description: "Two brothers search for the Philosopher's Stone after a failed alchemy experiment.",
+            tags: ["Alchemy", "Military", "Fantasy"]
+        },
+        {
+            id: 29,
+            title: "Death Note",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2006,
+            episodes: 37,
+            status: "completed",
+            rating: 8.6,
+            genres: ["Mystery", "Supernatural", "Thriller"],
+            description: "A student gains a notebook that can kill anyone whose name is written in it.",
+            tags: ["Psychological", "Crime", "Supernatural"]
+        },
+        {
+            id: 30,
+            title: "Hunter x Hunter",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2011,
+            episodes: 148,
+            status: "completed",
+            rating: 9.0,
+            genres: ["Action", "Adventure", "Fantasy"],
+            description: "Gon becomes a Hunter to find his father and explores a dangerous world.",
+            tags: ["Adventure", "Superpowers", "Tournament"]
+        },
+        {
+            id: 31,
+            title: "Steins;Gate",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2011,
+            episodes: 24,
+            status: "completed",
+            rating: 9.1,
+            genres: ["Sci-Fi", "Thriller", "Drama"],
+            description: "A group of friends accidentally invent time travel with dangerous consequences.",
+            tags: ["Time Travel", "Science", "Thriller"]
+        },
+        {
+            id: 32,
+            title: "Code Geass",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2006,
+            episodes: 50,
+            status: "completed",
+            rating: 8.7,
+            genres: ["Action", "Mecha", "Military"],
+            description: "Lelouch gains a power that lets him command anyone and leads a rebellion.",
+            tags: ["Mecha", "Military", "Supernatural"]
+        },
+        {
+            id: 33,
+            title: "Mob Psycho 100",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2016,
+            episodes: 37,
+            status: "completed",
+            rating: 8.5,
+            genres: ["Action", "Comedy", "Supernatural"],
+            description: "A powerful psychic tries to live a normal life while dealing with threats.",
+            tags: ["Psychic", "Comedy", "Supernatural"]
+        },
+        {
+            id: 34,
+            title: "One Punch Man",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2015,
+            episodes: 24,
+            status: "completed",
+            rating: 8.7,
+            genres: ["Action", "Comedy", "Superhero"],
+            description: "A hero who can defeat anyone with one punch searches for a worthy opponent.",
+            tags: ["Parody", "Superhero", "Comedy"]
+        },
+        {
+            id: 35,
+            title: "Tokyo Revengers",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2021,
+            episodes: 37,
+            status: "watching",
+            rating: 8.0,
+            genres: ["Action", "Drama", "Supernatural"],
+            description: "Takemichi travels back in time to save his girlfriend and change the future.",
+            tags: ["Time Travel", "Delinquents", "Gangs"]
+        },
+        {
+            id: 36,
+            title: "Haikyuu!!",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2014,
+            episodes: 85,
+            status: "completed",
+            rating: 8.7,
+            genres: ["Sports", "Comedy", "Drama"],
+            description: "A short boy joins his high school volleyball team aiming for nationals.",
+            tags: ["Volleyball", "Sports", "School"]
+        },
+        {
+            id: 37,
+            title: "Your Lie in April",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2014,
+            episodes: 22,
+            status: "completed",
+            rating: 8.7,
+            genres: ["Drama", "Music", "Romance"],
+            description: "A pianist meets a violinist who helps him rediscover his love for music.",
+            tags: ["Music", "Romance", "Drama"]
+        },
+        {
+            id: 38,
+            title: "Violet Evergarden",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2018,
+            episodes: 13,
+            status: "completed",
+            rating: 8.7,
+            genres: ["Drama", "Fantasy", "Slice of Life"],
+            description: "A former soldier becomes an Auto Memory Doll writing letters for others.",
+            tags: ["Emotional", "Beautiful", "Drama"]
+        },
+        {
+            id: 39,
+            title: "Re:Zero",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2016,
+            episodes: 50,
+            status: "watching",
+            rating: 8.3,
+            genres: ["Fantasy", "Drama", "Thriller"],
+            description: "A boy is transported to a fantasy world with the ability to return by death.",
+            tags: ["Isekai", "Time Loop", "Fantasy"]
+        },
+        {
+            id: 40,
+            title: "Konosuba",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2016,
+            episodes: 20,
+            status: "completed",
+            rating: 8.1,
+            genres: ["Comedy", "Fantasy", "Adventure"],
+            description: "A boy is reincarnated in a fantasy world with a useless goddess.",
+            tags: ["Isekai", "Comedy", "Parody"]
+        },
+        {
+            id: 41,
+            title: "Sword Art Online",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2012,
+            episodes: 96,
+            status: "completed",
+            rating: 7.5,
+            genres: ["Action", "Adventure", "Romance"],
+            description: "Players trapped in a virtual reality MMORPG must clear the game to escape.",
+            tags: ["VR", "MMORPG", "Adventure"]
+        },
+        {
+            id: 42,
+            title: "Dragon Ball Super",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2015,
+            episodes: 131,
+            status: "completed",
+            rating: 7.4,
+            genres: ["Action", "Adventure", "Comedy"],
+            description: "Goku and friends face new threats from different universes.",
+            tags: ["Martial Arts", "Superpowers", "Shonen"]
+        },
+        {
+            id: 43,
+            title: "Neon Genesis Evangelion",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 1995,
+            episodes: 26,
+            status: "completed",
+            rating: 8.6,
+            genres: ["Action", "Drama", "Mecha"],
+            description: "Teenagers pilot giant mechs to protect Earth from mysterious beings.",
+            tags: ["Psychological", "Mecha", "Drama"]
+        },
+        {
+            id: 44,
+            title: "Cowboy Bebop",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 1998,
+            episodes: 26,
+            status: "completed",
+            rating: 8.9,
+            genres: ["Action", "Adventure", "Sci-Fi"],
+            description: "Bounty hunters travel through space in their ship, the Bebop.",
+            tags: ["Space", "Jazz", "Noir"]
+        },
+        {
+            id: 45,
+            title: "Trigun",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 1998,
+            episodes: 26,
+            status: "planning",
+            rating: 8.3,
+            genres: ["Action", "Adventure", "Sci-Fi"],
+            description: "A gunslinger with a huge bounty travels the desert planet.",
+            tags: ["Western", "Sci-Fi", "Comedy"]
+        },
+        {
+            id: 46,
+            title: "Berserk",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 1997,
+            episodes: 25,
+            status: "planning",
+            rating: 8.8,
+            genres: ["Action", "Adventure", "Fantasy"],
+            description: "A lone mercenary travels the land seeking revenge.",
+            tags: ["Dark Fantasy", "Medieval", "Mature"]
+        },
+        {
+            id: 47,
+            title: "Clannad: After Story",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2008,
+            episodes: 24,
+            status: "completed",
+            rating: 8.8,
+            genres: ["Drama", "Romance", "Slice of Life"],
+            description: "Tomoya and Nagisa navigate life after high school together.",
+            tags: ["Emotional", "Romance", "Drama"]
+        },
+        {
+            id: 48,
+            title: "Anohana: The Flower We Saw That Day",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2011,
+            episodes: 11,
+            status: "completed",
+            rating: 8.3,
+            genres: ["Drama", "Supernatural"],
+            description: "Childhood friends reunite when a ghost of their dead friend appears.",
+            tags: ["Emotional", "Ghost", "Drama"]
+        },
+        {
+            id: 49,
+            title: "A Silent Voice",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2016,
+            episodes: 1,
+            status: "completed",
+            rating: 8.3,
+            genres: ["Drama", "Romance", "School"],
+            description: "A former bully seeks redemption by reconnecting with his deaf victim.",
+            tags: ["Movie", "Redemption", "Drama"]
+        },
+        {
+            id: 50,
+            title: "Your Name",
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: 2016,
+            episodes: 1,
+            status: "completed",
+            rating: 8.4,
+            genres: ["Romance", "Supernatural", "Drama"],
+            description: "Two teenagers mysteriously swap bodies and develop a connection.",
+            tags: ["Movie", "Body Swap", "Romance"]
+        }
+    ];
+
+    // Add remaining 50 anime (simplified for space)
+    for (let i = 51; i <= 100; i++) {
+        const years = [2023, 2022, 2021, 2020, 2019];
+        const statuses = ["watching", "completed", "planning"];
+        const genres = [
+            ["Action", "Adventure"],
+            ["Drama", "Romance"],
+            ["Comedy", "Slice of Life"],
+            ["Fantasy", "Supernatural"],
+            ["Sci-Fi", "Mystery"],
+            ["Horror", "Thriller"]
+        ];
+        
+        const year = years[Math.floor(Math.random() * years.length)];
+        const status = statuses[Math.floor(Math.random() * statuses.length)];
+        const genreSet = genres[Math.floor(Math.random() * genres.length)];
+        const rating = (Math.random() * 2 + 7).toFixed(1);
+        const episodes = Math.floor(Math.random() * 24) + 12;
+        
+        animeDatabase.push({
+            id: i,
+            title: `Anime Series ${i}`,
+            image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            year: year,
+            episodes: episodes,
+            status: status,
+            rating: parseFloat(rating),
+            genres: genreSet,
+            description: `This is the description for Anime Series ${i}. It features exciting adventures and compelling characters.`,
+            tags: ["Tag1", "Tag2", "Tag3"]
+        });
+    }
+
+    // DOM Elements
+    const animeGrid = document.getElementById('animeGrid');
+    const pagination = document.getElementById('pagination');
+    const genreFilter = document.getElementById('genreFilter');
+    const yearFilter = document.getElementById('yearFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    const applyFiltersBtn = document.getElementById('applyFilters');
+    const resetFiltersBtn = document.getElementById('resetFilters');
+
+    // Pagination variables
+    let currentPage = 1;
+    const itemsPerPage = 12;
+    let filteredAnime = [...animeDatabase];
+
+    // Initialize
+    function init() {
+        renderAnimeGrid();
+        renderPagination();
+        setupEventListeners();
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+        applyFiltersBtn.addEventListener('click', applyFilters);
+        resetFiltersBtn.addEventListener('click', resetFilters);
+    }
+
+    // Apply filters function
+    function applyFilters() {
+        const selectedGenre = genreFilter.value;
+        const selectedYear = yearFilter.value;
+        const selectedStatus = statusFilter.value;
+        
+        filteredAnime = animeDatabase.filter(anime => {
+            // Genre filter
+            if (selectedGenre !== 'all' && !anime.genres.includes(selectedGenre)) {
+                return false;
+            }
+            
+            // Year filter
+            if (selectedYear !== 'all' && anime.year.toString() !== selectedYear) {
+                return false;
+            }
+            
+            // Status filter
+            if (selectedStatus !== 'all' && anime.status !== selectedStatus) {
+                return false;
+            }
+            
+            return true;
+        });
+        
+        currentPage = 1;
+        renderAnimeGrid();
+        renderPagination();
+    }
+
+    // Reset filters function
+    function resetFilters() {
+        genreFilter.value = 'all';
+        yearFilter.value = 'all';
+        statusFilter.value = 'all';
+        filteredAnime = [...animeDatabase];
+        currentPage = 1;
+        renderAnimeGrid();
+        renderPagination();
+    }
+
+    // Render anime grid
+    function renderAnimeGrid() {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const currentAnime = filteredAnime.slice(startIndex, endIndex);
+        
+        animeGrid.innerHTML = '';
+        
+        currentAnime.forEach(anime => {
+            const animeCard = document.createElement('div');
+            animeCard.className = 'anime-card';
+            
+            // Status class
+            let statusClass = '';
+            let statusText = '';
+            switch(anime.status) {
+                case 'watching':
+                    statusClass = 'status-watching';
+                    statusText = 'Watching';
+                    break;
+                case 'completed':
+                    statusClass = 'status-completed';
+                    statusText = 'Completed';
+                    break;
+                case 'planning':
+                    statusClass = 'status-planning';
+                    statusText = 'Plan to Watch';
+                    break;
+            }
+            
+            // Generate star rating
+            const fullStars = Math.floor(anime.rating);
+            const halfStar = anime.rating % 1 >= 0.5;
+            let starsHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= fullStars) {
+                    starsHTML += '★';
+                } else if (i === fullStars + 1 && halfStar) {
+                    starsHTML += '½';
+                } else {
+                    starsHTML += '☆';
+                }
+            }
+            
+            animeCard.innerHTML = `
+                <img src="${anime.image}" alt="${anime.title}" class="anime-image">
+                <div class="anime-info">
+                    <h3 class="anime-title">${anime.title}</h3>
+                    <div class="anime-meta">
+                        <span>${anime.year}</span>
+                        <span>${anime.episodes} eps</span>
+                        <span class="anime-status ${statusClass}">${statusText}</span>
+                    </div>
+                    <div class="anime-tags">
+                        ${anime.genres.map(genre => `<span class="tag">${genre}</span>`).join('')}
+                    </div>
+                    <p class="anime-description">${anime.description}</p>
+                    <div class="rating">${starsHTML} ${anime.rating}</div>
+                </div>
+            `;
+            
+            animeGrid.appendChild(animeCard);
+        });
+        
+        // Update quick stats
+        updateQuickStats();
+    }
+
+    // Update quick stats
+    function updateQuickStats() {
+        const watchingCount = filteredAnime.filter(a => a.status === 'watching').length;
+        const completedCount = filteredAnime.filter(a => a.status === 'completed').length;
+        const planningCount = filteredAnime.filter(a => a.status === 'planning').length;
+        const totalEpisodes = filteredAnime.reduce((sum, anime) => sum + anime.episodes, 0);
+        
+        // Update the quick stats cards if they exist
+        const statCards = document.querySelectorAll('.stat-card .number');
+        if (statCards.length >= 4) {
+            statCards[0].textContent = watchingCount;
+            statCards[1].textContent = completedCount;
+            statCards[2].textContent = planningCount;
+            statCards[3].textContent = totalEpisodes;
+        }
+    }
+
+    // Render pagination
+    function renderPagination() {
+        const totalPages = Math.ceil(filteredAnime.length / itemsPerPage);
+        
+        pagination.innerHTML = '';
+        
+        // Previous button
+        const prevButton = document.createElement('button');
+        prevButton.className = 'page-btn';
+        prevButton.textContent = '←';
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderAnimeGrid();
+                renderPagination();
+            }
+        });
+        pagination.appendChild(prevButton);
+        
+        // Page buttons
+        for (let i = 1; i <= totalPages; i++) {
+            if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+                const pageButton = document.createElement('button');
+                pageButton.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                pageButton.textContent = i;
+                pageButton.addEventListener('click', () => {
+                    currentPage = i;
+                    renderAnimeGrid();
+                    renderPagination();
+                });
+                pagination.appendChild(pageButton);
+            } else if (i === currentPage - 3 || i === currentPage + 3) {
+                const ellipsis = document.createElement('span');
+                ellipsis.className = 'page-btn';
+                ellipsis.textContent = '...';
+                ellipsis.style.cursor = 'default';
+                pagination.appendChild(ellipsis);
+            }
+        }
+        
+        // Next button
+        const nextButton = document.createElement('button');
+        nextButton.className = 'page-btn';
+        nextButton.textContent = '→';
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderAnimeGrid();
+                renderPagination();
+            }
+        });
+        pagination.appendChild(nextButton);
+    }
+
+    // Initialize the app when page loads
+    document.addEventListener('DOMContentLoaded', init);
+</script>

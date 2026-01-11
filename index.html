@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Anime Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>🎌 Anime Tracker</h1>
+
+    <div class="form">
+        <input type="text" id="title" placeholder="Anime Title">
+        <input type="number" id="episodes" placeholder="Episodes Watched">
+        <select id="status">
+            <option value="Watching">Watching</option>
+            <option value="Completed">Completed</option>
+            <option value="On-Hold">On-Hold</option>
+            <option value="Dropped">Dropped</option>
+        </select>
+        <button onclick="addAnime()">Add Anime</button>
+    </div>
+
+    <ul id="animeList"></ul>
+
+    <script src="script.js"></script>
+</body>
+</html>
+body {
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: #fff;
+    text-align: center;
+}
+
+h1 {
+    margin-top: 20px;
+}
+
+.form {
+    margin: 20px;
+}
+
+input, select, button {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    border: none;
+}
+
+button {
+    background: #ff4757;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #ff6b81;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: #1e1e1e;
+    margin: 10px auto;
+    padding: 10px;
+    width: 60%;
+    border-radius: 5px;
+}
+
+.delete {
+    background: #ff4757;
+    margin-left: 10px;
+}
+let animeList = JSON.parse(localStorage.getItem("animeList")) || [];
+
+function saveData() {
+    localStorage.setItem("animeList", JSON.stringify(animeList));
+}
+
+function displayAnime() {
+    const list = document.getElementById("animeList");
+    list.innerHTML = "";
+
+    animeList.forEach((anime, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <strong>${anime.title}</strong> | 
+            Episodes: ${anime.episodes} | 
+            Status: ${anime.status}
+            <button class="delete" onclick="deleteAnime(${index})">Delete</button>
+        `;
+        list.appendChild(li);
+    });
+}
+
+function addAnime() {
+    const title = document.getElementById("title").value;
+    const episodes = document.getElementById("episodes").value;
+    const status = document.getElementById("status").value;
+
+    if (title === "" || episodes === "") {
+        alert("Please fill all fields");
+        return;
+    }
+
+    animeList.push({ title, episodes, status });
+    saveData();
+    displayAnime();
+
+    document.getElementById("title").value = "";
+    document.getElementById("episodes").value = "";
+}
+
+function deleteAnime(index) {
+    animeList.splice(index, 1);
+    saveData();
+    displayAnime();
+}
+
+displayAnime();
+// Pre-loaded Spring 2025 anime lineup
+let animeList = JSON.parse(localStorage.getItem("animeList")) || [
+    { title: "A Ninja and Assassin Living Together", episodes: 0, status: "Planned" },
+    { title: "Aharen-san wa Hakarenai Season 2", episodes: 0, status: "Planned" },
+    { title: "Alien MuMu", episodes: 0, status: "Planned" },
+    { title: "Anne Shirley", episodes: 0, status: "Planned" },
+    { title: "Apocalypse Hotel", episodes: 0, status: "Planned" },
+    { title: "Black Butler: Emerald Witch Arc", episodes: 0, status: "Planned" },
+    { title: "Bye Bye, Earth Season 2", episodes: 0, status: "Planned" },
+    { title: "Compass", episodes: 0, status: "Planned" },
+    { title: "Devil May Cry", episodes: 0, status: "Planned" },
+    { title: "Fire Force Season 3", episodes: 0, status: "Planned" },
+    { title: "#Compass 2.0 Animation Project", episodes: 0, status: "Planned" },
+    { title: "Can a Boy-Girl Friendship Survive?", episodes: 0, status: "Planned" }
+];
+
+function saveData() {
+    localStorage.setItem("animeList", JSON.stringify(animeList));
+}
+
+function displayAnime() {
+    const list = document.getElementById("animeList");
+    list.innerHTML = "";
+
+    animeList.forEach((anime, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+            <strong>${anime.title}</strong> | 
+            Episodes: ${anime.episodes} | 
+            Status: ${anime.status}
+            <button class="delete" onclick="deleteAnime(${index})">Delete</button>
+        `;
+        list.appendChild(li);
+    });
+}
+
+function addAnime() {
+    const title = document.getElementById("title").value;
+    const episodes = document.getElementById("episodes").value;
+    const status = document.getElementById("status").value;
+
+    if (title === "" || episodes === "") {
+        alert("Please fill all fields");
+        return;
+    }
+
+    animeList.push({ title, episodes, status });
+    saveData();
+    displayAnime();
+
+    document.getElementById("title").value = "";
+    document.getElementById("episodes").value = "";
+}
+
+function deleteAnime(index) {
+    animeList.splice(index, 1);
+    saveData();
+    displayAnime();
+}
+
+displayAnime();
